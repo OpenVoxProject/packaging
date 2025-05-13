@@ -3,3 +3,5 @@
 Gemfile.lock
 *.gem
 .ruby-version
+/vendor
+/.vendor
