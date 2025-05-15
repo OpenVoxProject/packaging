@@ -1,3 +1,5 @@
+# This tool is not used by OpenVox, and is thus archived. If you need it or would like to revive it, contact @nmburgan.
+
 # Packaging
 
 [![Build Status](https://travis-ci.org/puppetlabs/packaging.png?branch=master)](https://travis-ci.org/puppetlabs/packaging)
