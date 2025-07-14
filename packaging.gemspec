@@ -20,7 +20,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency('artifactory', ['~> 3'])
   gem.add_dependency('base64', ['< 0.4'])
   gem.add_dependency('benchmark', ['< 0.5'])
-  gem.add_dependency('csv', ['3.1.5'])
+  gem.add_dependency('csv', ['~> 3.0'])
   gem.add_dependency('rake', ['>= 12.3'])
   gem.add_dependency('release-metrics')
   gem.require_path = 'lib'
