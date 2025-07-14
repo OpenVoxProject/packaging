@@ -459,7 +459,7 @@ describe "Pkg::Config" do
 
   describe "#load_default_configs" do
     before(:each) do
-      @project_root = double('project_root')
+      @project_root = ''
       Pkg::Config.project_root = @project_root
       @test_project_data = File.join(Pkg::Config.project_root, 'ext', 'project_data.yaml')
       @test_build_defaults = File.join(Pkg::Config.project_root, 'ext', 'build_defaults.yaml')

@@ -24,9 +24,9 @@ module Pkg::Util::RakeUtils
       end
     end
 
-    def invoke_task(task, *args)
+    def invoke_task(task, *)
       Rake::Task[task].reenable
-      Rake::Task[task].invoke(*args)
+      Rake::Task[task].invoke(*)
     end
 
     #  Add a dependency to a rake task. "depender" must be an instance of

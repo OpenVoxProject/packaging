@@ -31,18 +31,18 @@ describe Pkg::Util::Jenkins do
     it "should return false on job not existing" do
       Pkg::Util::Net.should_receive(:curl_form_data).with("http://#{build_host}/job/#{name}/config.xml", ["--silent", "--fail"], :quiet => true).and_return(['output', 1])
       Pkg::Util::Execution.should_receive(:success?).and_return(false)
-      Pkg::Util::Jenkins.jenkins_job_exists?(name).should be_false
+      Pkg::Util::Jenkins.jenkins_job_exists?(name).should be false
     end
 
     it "should return false if curl_form_data raised a runtime error" do
       Pkg::Util::Net.should_receive(:curl_form_data).with("http://#{build_host}/job/#{name}/config.xml", ["--silent", "--fail"], :quiet => true).and_return(false)
-      Pkg::Util::Jenkins.jenkins_job_exists?(name).should be_false
+      Pkg::Util::Jenkins.jenkins_job_exists?(name).should be false
     end
 
     it "should return true when job exists" do
       Pkg::Util::Net.should_receive(:curl_form_data).with("http://#{build_host}/job/#{name}/config.xml", ["--silent", "--fail"], :quiet => true).and_return(['output', 0])
       Pkg::Util::Execution.should_receive(:success?).and_return(true)
-      Pkg::Util::Jenkins.jenkins_job_exists?(name).should be_true
+      Pkg::Util::Jenkins.jenkins_job_exists?(name).should be true
     end
   end
 

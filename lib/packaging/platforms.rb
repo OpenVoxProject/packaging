@@ -1,5 +1,3 @@
-require 'set'
-
 # Data plus utilities surrounding platforms that the automation in this repo
 # explicitly supports
 module Pkg

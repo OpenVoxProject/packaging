@@ -200,7 +200,7 @@ describe '#Pkg::Util::Ship' do
     it 'returns false if there are no packages to ship' do
       expect(Pkg::Util::Ship.ship_pkgs(['pkg/**/*.msi'],
                                        test_staging_server, test_remote_path))
-        .to eq(false)
+        .to be(false)
     end
   end
 end

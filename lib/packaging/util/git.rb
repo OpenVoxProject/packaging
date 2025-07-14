@@ -129,7 +129,6 @@ module Pkg::Util::Git
       end
     end
 
-    # rubocop:disable Style/GuardClause
     def fail_unless_repo
       unless repo?
         raise "Pkg::Config.project_root (#{Pkg::Config.project_root}) is not \
