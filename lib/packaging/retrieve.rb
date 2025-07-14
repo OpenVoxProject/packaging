@@ -25,6 +25,7 @@ module Pkg::Retrieve
     wget_command = wget
     options.each do |option, value|
       next unless value
+
       if value.is_a?(TrueClass)
         wget_command << " --#{option}"
       else
@@ -49,6 +50,7 @@ module Pkg::Retrieve
     unless Pkg::Config.foss_platforms
       fail "Error: FOSS_ONLY specified but no 'foss_platforms' specified in the configuration."
     end
+
     default_wget(local_target, "#{build_url}/", { 'level' => 1 })
     yaml_path = File.join(local_target, "#{Pkg::Config.ref}.yaml")
     unless File.readable?(yaml_path)
@@ -72,9 +74,10 @@ module Pkg::Retrieve
     begin
       warn "Info: could not find `wget`, rsyncing from #{Pkg::Config.distribution_server} instead"
       Pkg::Util::Net.rsync_from(
-        "#{rsync_path}/", Pkg::Config.distribution_server, "#{local_target}/")
+        "#{rsync_path}/", Pkg::Config.distribution_server, "#{local_target}/"
+      )
     rescue => e
-      fail "Error: rsync from #{Pkg::Config.distribution_server}#{rsync_path}/ "\
+      fail "Error: rsync from #{Pkg::Config.distribution_server}#{rsync_path}/ " \
            "to #{local_target}/ failed: #{e}"
     end
   end

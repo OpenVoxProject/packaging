@@ -45,6 +45,7 @@ module Pkg
       if Pkg::Config.templates
         @templates = Pkg::Config.templates.dup
         fail "templates must be an array" unless @templates.is_a?(Array)
+
         expand_templates
       end
     end
@@ -141,6 +142,7 @@ module Pkg
         unless $?.success?
           fail "Failed to create .tar.gz archive with #{@tar}. Please ensure the tar command in your path accepts the flags '-c', '-z', and '-f'"
         end
+
         mv File.basename(target), target
       end
     end
@@ -157,7 +159,5 @@ module Pkg
       self.tar(@target, workdir)
       self.clean_up workdir
     end
-
   end
 end
-

@@ -43,7 +43,7 @@ module Pkg::Util
     # Fetch the full ref using ls-remote, this should raise an error if it returns non-zero
     # because that means this ref doesn't exist in the repo
     def fetch_full_ref
-      stdout, _, _ = Pkg::Util::Execution.capture3("#{GIT} ls-remote --tags --heads --exit-code #{address} #{ref}")
+      stdout, = Pkg::Util::Execution.capture3("#{GIT} ls-remote --tags --heads --exit-code #{address} #{ref}")
       stdout.split.last
     rescue RuntimeError => e
       raise "ERROR : Not a ref or sha!\n#{e}"

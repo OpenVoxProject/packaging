@@ -46,10 +46,10 @@ def make_directory_tree
   project_tmp    = "#{Pkg::Util::File.mktemp}/#{@package_name}"
   @scratch       = "#{project_tmp}/#{@title}"
   @working_tree  = {
-     'scripts'   => "#{@scratch}/scripts",
-     'resources' => "#{@scratch}/resources",
-     'working'   => "#{@scratch}/root",
-     'payload'   => "#{@scratch}/payload",
+    'scripts' => "#{@scratch}/scripts",
+    'resources' => "#{@scratch}/resources",
+    'working' => "#{@scratch}/root",
+    'payload' => "#{@scratch}/payload",
   }
   puts "Cleaning Tree: #{project_tmp}"
   rm_rf(project_tmp)
@@ -72,7 +72,6 @@ def make_directory_tree
   if File.exist?('ext/packaging/static_artifacts/PackageInfo.plist')
     cp 'ext/packaging/static_artifacts/PackageInfo.plist', "#{@scratch}/PackageInfo.plist"
   end
-
 end
 
 # method:        build_dmg
@@ -131,7 +130,7 @@ end
 #                installed as the package's payload.
 #
 def pack_source
-  work          = "#{@working_tree['working']}"
+  work = "#{@working_tree['working']}"
   source = pwd
 
   # Make all necessary directories

@@ -33,7 +33,7 @@ module Pkg::Sign::Dmg
       /bin/rm #{work_dir}/$dmg.dmg ;
       /usr/bin/hdiutil create -volname $dmg -srcfolder #{signed}/ #{work_dir}/$dmg.dmg ;
       /bin/rm #{signed}/* ; done])
-    dmgs.each do | dmg |
+    dmgs.each do |dmg|
       Pkg::Util::Net.rsync_from("#{work_dir}/#{File.basename(dmg)}", rsync_host_string, File.dirname(dmg))
     end
     Pkg::Util::Net.remote_execute(ssh_host_string, "if [ -d '#{work_dir}' ]; then rm -rf '#{work_dir}'; fi")

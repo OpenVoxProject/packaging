@@ -38,7 +38,6 @@ task :prep_deb_tars, :work_dir do |t, args|
     mv "#{Pkg::Config.project}-#{Pkg::Config.version}.tar.gz", "#{Pkg::Config.project}_#{Pkg::Config.origversion}.orig.tar.gz"
   end
 
-
   # This assumes that work_dir is absolute, which I hope is a safe assumption.
   #
   # Also, it turns out that invoking 'find' on a directory that doesn't exist
@@ -70,10 +69,10 @@ task :build_deb, :deb_command, :cow do |t, args|
     work_dir  = Pkg::Util::File.mktemp
     subdir    = 'pe/' if Pkg::Config.build_pe
     codename = /base-(.*)-(.*)\.cow/.match(cow)[1] unless cow.nil?
-    dest_dir  = File.join(Pkg::Config.project_root, "pkg", "#{subdir}deb", codename.to_s, subrepo.to_s)
+    dest_dir = File.join(Pkg::Config.project_root, "pkg", "#{subdir}deb", codename.to_s, subrepo.to_s)
     Pkg::Util::Tool.check_tool(deb_build)
     mkdir_p dest_dir
-    deb_args  = { :work_dir => work_dir, :cow => cow }
+    deb_args = { :work_dir => work_dir, :cow => cow }
     Rake::Task[:prep_deb_tars].reenable
     Rake::Task[:prep_deb_tars].invoke(work_dir)
     cd "#{work_dir}/#{Pkg::Config.project}-#{Pkg::Config.debversion}" do
@@ -112,7 +111,7 @@ end
 
 namespace :pl do
   desc "Create a deb from this repo using the default cow #{Pkg::Config.default_cow}."
-  task :deb => "package:tar"  do
+  task :deb => "package:tar" do
     Pkg::Util.check_var('PE_VER', Pkg::Config.pe_version) if Pkg::Config.build_pe
     Rake::Task[:build_deb].invoke('pdebuild', Pkg::Config.default_cow)
   end

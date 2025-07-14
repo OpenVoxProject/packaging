@@ -2,9 +2,7 @@
 require 'fileutils'
 
 module Pkg::Deb::Repo
-
   class << self
-
     # This is the default set of arches we are using for our reprepro repos. We
     # take this list and combine it with the list of supported arches for each
     # given platform to ensure a complete set of architectures. We use this
@@ -43,7 +41,7 @@ module Pkg::Deb::Repo
       # First test if the directory even exists
       #
       begin
-        stdout, _, _ = Pkg::Util::Execution.capture3("#{wget} --spider -r -l 1 --no-parent #{repo_base} 2>&1")
+        stdout, = Pkg::Util::Execution.capture3("#{wget} --spider -r -l 1 --no-parent #{repo_base} 2>&1")
       rescue RuntimeError
         warn "No debian repos available for #{Pkg::Config.project} at #{Pkg::Config.ref}."
         return
@@ -51,7 +49,6 @@ module Pkg::Deb::Repo
 
       # We want to exclude index and robots files and only include the http: prefixed elements
       repo_urls = stdout.split.uniq.reject { |x| x =~ /\?|index|robots/ }.select { |x| x =~ /http:/ }.map { |x| x.chomp('/') }
-
 
       # Create apt sources.list files that can be added to hosts for installing
       # these packages. We use the list of distributions to create a config
@@ -61,11 +58,11 @@ module Pkg::Deb::Repo
       repo_urls.each do |url|
         # We want to skip the base_url, which wget returns as one of the results
         next if "#{url}/" == repo_base
+
         platform_tag = Pkg::Paths.tag_from_artifact_path(url)
-        platform, version, _ = Pkg::Platforms.parse_platform_tag(platform_tag)
+        platform, version, = Pkg::Platforms.parse_platform_tag(platform_tag)
         codename = Pkg::Platforms.codename_for_platform_version(platform, version)
-        repoconfig = ["# Packages for #{Pkg::Config.project} built from ref #{Pkg::Config.ref}",
-                      "deb #{url} #{codename} #{reprepro_repo_name}"]
+        repoconfig = ["# Packages for #{Pkg::Config.project} built from ref #{Pkg::Config.ref}", "deb #{url} #{codename} #{reprepro_repo_name}"]
         config = File.join("pkg", target, "deb", "pl-#{Pkg::Config.project}-#{Pkg::Config.ref}-#{codename}.list")
         File.open(config, 'w') { |f| f.puts repoconfig }
       end
@@ -76,7 +73,7 @@ module Pkg::Deb::Repo
       wget = Pkg::Util::Tool.check_tool("wget")
       FileUtils.mkdir_p("pkg/#{target}")
       config_url = "#{base_url}/#{target}/deb/"
-      stdout, _, _ = Pkg::Util::Execution.capture3("#{wget} -r -np -nH --cut-dirs 3 -P pkg/#{target} --reject 'index*' #{config_url}")
+      stdout, = Pkg::Util::Execution.capture3("#{wget} -r -np -nH --cut-dirs 3 -P pkg/#{target} --reject 'index*' #{config_url}")
       stdout
     rescue => e
       fail "Couldn't retrieve deb apt repo configs.\n#{e}"
@@ -95,7 +92,7 @@ module Pkg::Deb::Repo
 
       artifact_paths.each do |path|
         platform_tag = Pkg::Paths.tag_from_artifact_path(path)
-        platform, version, _ = Pkg::Platforms. parse_platform_tag(platform_tag)
+        platform, version, = Pkg::Platforms.parse_platform_tag(platform_tag)
         codename = Pkg::Platforms.codename_for_platform_version(platform, version)
         arches = Pkg::Platforms.arches_for_codename(codename)
 
@@ -166,6 +163,7 @@ Description: Apt repository for acceptance testing" >> conf/distributions ; )
 
       dists.each do |dist|
         next unless supported_codenames.include?(dist)
+
         arches = Pkg::Platforms.arches_for_codename(dist)
         Dir.chdir("#{target}/apt/#{dist}") do
           File.open("conf/distributions", "w") do |f|
@@ -178,7 +176,7 @@ Description: #{message} for #{dist}
 SignWith: #{Pkg::Config.gpg_key}"
           end
 
-          stdout, _, _ = Pkg::Util::Execution.capture3("#{reprepro} -vvv --confdir ./conf --dbdir ./db --basedir ./ export")
+          stdout, = Pkg::Util::Execution.capture3("#{reprepro} -vvv --confdir ./conf --dbdir ./db --basedir ./ export")
           stdout
         end
       end
@@ -259,6 +257,5 @@ SignWith: #{Pkg::Config.gpg_key}"
         Pkg::Util::Net.remote_execute(destination_server, cp_command)
       end
     end
-
   end
 end

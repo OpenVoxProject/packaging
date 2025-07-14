@@ -73,6 +73,7 @@ namespace :pl do
       end
     end
     fail unless signed
+
     puts "All rpms signed"
   end
 
@@ -139,7 +140,8 @@ namespace :pl do
       sign_tasks    << "pl:sign_ips" if Pkg::Config.vanagon_project
       sign_tasks    << "pl:sign_msi" if Pkg::Config.build_msi || Pkg::Config.vanagon_project
       remote_repo   = Pkg::Util::Net.remote_unpack_git_bundle(
-        Pkg::Config.signing_server, 'HEAD', nil, signing_bundle)
+        Pkg::Config.signing_server, 'HEAD', nil, signing_bundle
+      )
 
       Pkg::Util::Net.rsync_to(root_dir, Pkg::Config.signing_server, remote_repo)
       params_file = File.join(remote_repo, 'pkg', "#{Pkg::Config.ref}.yaml")

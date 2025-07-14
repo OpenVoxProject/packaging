@@ -23,16 +23,14 @@ describe '#Pkg::Util::Ship' do
       before :each do
         allow(Dir).to receive(:glob).with('pkg/**/*.msi').and_return(msi_packages)
       end
+
       it 'correctly excludes any packages that match a passed excludes argument' do
-        expect(Pkg::Util::Ship.collect_packages(['pkg/**/*.msi'], ['puppet-agent-x(86|64).msi']))
-          .not_to include('pkg/windows/puppet6/puppet-agent-x86.msi')
-        expect(Pkg::Util::Ship.collect_packages(['pkg/**/*.msi'], ['puppet-agent-x(86|64).msi']))
-          .not_to include('pkg/windows/puppet6/puppet-agent-x64.msi')
+        expect(Pkg::Util::Ship.collect_packages(['pkg/**/*.msi'], ['puppet-agent-x(86|64).msi'])).not_to include('pkg/windows/puppet6/puppet-agent-x86.msi')
+        expect(Pkg::Util::Ship.collect_packages(['pkg/**/*.msi'], ['puppet-agent-x(86|64).msi'])).not_to include('pkg/windows/puppet6/puppet-agent-x64.msi')
       end
+
       it 'correctly includes packages that do not match a passed excluded argument' do
-        expect(Pkg::Util::Ship.collect_packages(['pkg/**/*.msi'],
-                                                ['bogus-puppet-agent-x(86|64).msi']))
-          .to match_array(msi_packages)
+        expect(Pkg::Util::Ship.collect_packages(['pkg/**/*.msi'], ['bogus-puppet-agent-x(86|64).msi'])).to match_array(msi_packages)
       end
     end
 
@@ -98,15 +96,13 @@ describe '#Pkg::Util::Ship' do
     original_packages = retrieved_packages
 
     it 'leaves the old packages in place' do
-      reorganized_packages = Pkg::Util::Ship
-                               .reorganize_packages(retrieved_packages, scratch_directory)
+      reorganized_packages = Pkg::Util::Ship.reorganize_packages(retrieved_packages, scratch_directory)
 
       expect(retrieved_packages).to eq(original_packages)
     end
 
     it 'returns a list of properly reorganized packages' do
-      reorganized_packages = Pkg::Util::Ship
-                               .reorganize_packages(retrieved_packages, scratch_directory)
+      reorganized_packages = Pkg::Util::Ship.reorganize_packages(retrieved_packages, scratch_directory)
       expect(reorganized_packages).to eq(expected_reorganized_packages)
     end
   end
@@ -123,41 +119,39 @@ describe '#Pkg::Util::Ship' do
     it 'ships the packages to the staging server' do
       allow(Pkg::Util::Ship)
         .to receive(:collect_packages)
-              .and_return(retrieved_packages)
+        .and_return(retrieved_packages)
       allow(Pkg::Util::Ship)
         .to receive(:reorganize_packages)
-              .and_return(expected_reorganized_packages)
+        .and_return(expected_reorganized_packages)
       allow(Pkg::Util).to receive(:ask_yes_or_no).and_return(true)
       # All of these expects must be called in the same block in order for the
       # tests to work without actually shipping anything
       expect(Pkg::Util::Net)
         .to receive(:remote_execute)
-              .with(test_staging_server, /#{test_remote_path}/)
-              .exactly(retrieved_packages.count).times
+        .with(test_staging_server, /#{test_remote_path}/)
+        .exactly(retrieved_packages.count).times
       expect(Pkg::Util::Net)
         .to receive(:rsync_to)
-              .with(anything, test_staging_server, /#{test_remote_path}/, anything)
-              .exactly(retrieved_packages.count).times
+        .with(anything, test_staging_server, /#{test_remote_path}/, anything)
+        .exactly(retrieved_packages.count).times
       expect(Pkg::Util::Net)
         .to receive(:remote_set_ownership)
-              .with(test_staging_server, 'root', 'release', anything)
-              .exactly(retrieved_packages.count).times
+        .with(test_staging_server, 'root', 'release', anything)
+        .exactly(retrieved_packages.count).times
       expect(Pkg::Util::Net)
         .to receive(:remote_set_permissions)
-              .with(test_staging_server, '775', anything)
-              .exactly(retrieved_packages.count).times
+        .with(test_staging_server, '775', anything)
+        .exactly(retrieved_packages.count).times
       expect(Pkg::Util::Net)
         .to receive(:remote_set_permissions)
-              .with(test_staging_server, '0664', anything)
-              .exactly(retrieved_packages.count).times
+        .with(test_staging_server, '0664', anything)
+        .exactly(retrieved_packages.count).times
       expect(Pkg::Util::Net)
         .to receive(:remote_set_immutable)
-              .with(test_staging_server, anything)
-              .exactly(retrieved_packages.count).times
-      reorganized_packages = Pkg::Util::Ship
-                               .reorganize_packages(retrieved_packages, Dir.mktmpdir)
-      expect(Pkg::Util::Ship.ship_pkgs(['pkg/**/*.rpm'], test_staging_server, test_remote_path))
-        .to eq(reorganized_packages)
+        .with(test_staging_server, anything)
+        .exactly(retrieved_packages.count).times
+      reorganized_packages = Pkg::Util::Ship.reorganize_packages(retrieved_packages, Dir.mktmpdir)
+      expect(Pkg::Util::Ship.ship_pkgs(['pkg/**/*.rpm'], test_staging_server, test_remote_path)).to eq(reorganized_packages)
     end
 
     it 'ships packages containing the string `pkg` to the right place' do
@@ -175,32 +169,28 @@ describe '#Pkg::Util::Ship' do
       # tests to work without actually shipping anything
       expect(Pkg::Util::Net)
         .to receive(:remote_execute)
-              .with(test_staging_server, /#{test_remote_path}/)
+        .with(test_staging_server, /#{test_remote_path}/)
       expect(Pkg::Util::Net)
         .to receive(:rsync_to)
-              .with(anything, test_staging_server, /#{test_remote_path}/, anything)
+        .with(anything, test_staging_server, /#{test_remote_path}/, anything)
       expect(Pkg::Util::Net)
         .to receive(:remote_set_ownership)
-              .with(test_staging_server, 'root', 'release',
-                    [repository_base_path, "#{repository_base_path}/#{package_basename}"])
+        .with(test_staging_server, 'root', 'release',
+              [repository_base_path, "#{repository_base_path}/#{package_basename}"])
       expect(Pkg::Util::Net)
         .to receive(:remote_set_permissions)
-              .with(test_staging_server, '775', anything)
+        .with(test_staging_server, '775', anything)
       expect(Pkg::Util::Net)
         .to receive(:remote_set_permissions)
-              .with(test_staging_server, '0664', anything)
+        .with(test_staging_server, '0664', anything)
       expect(Pkg::Util::Net)
         .to receive(:remote_set_immutable)
-              .with(test_staging_server, anything)
-      expect(Pkg::Util::Ship.ship_pkgs(['pkg/**/*.rpm'], test_staging_server,
-                                       test_remote_path, excludes: ['puppet-agent']))
-        .to eq(['pkg/puppet6/el/7/x86_64/puppet-agent-6.19.0-1.el7.x86_64.rpm'])
+        .with(test_staging_server, anything)
+      expect(Pkg::Util::Ship.ship_pkgs(['pkg/**/*.rpm'], test_staging_server, test_remote_path, excludes: ['puppet-agent'])).to eq(['pkg/puppet6/el/7/x86_64/puppet-agent-6.19.0-1.el7.x86_64.rpm'])
     end
 
     it 'returns false if there are no packages to ship' do
-      expect(Pkg::Util::Ship.ship_pkgs(['pkg/**/*.msi'],
-                                       test_staging_server, test_remote_path))
-        .to be(false)
+      expect(Pkg::Util::Ship.ship_pkgs(['pkg/**/*.msi'], test_staging_server, test_remote_path)).to be(false)
     end
   end
 end

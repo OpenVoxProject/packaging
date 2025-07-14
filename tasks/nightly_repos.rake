@@ -158,13 +158,13 @@ DOC
 
       # Get the directories together - we need to figure out which bits to ship based on the include_path
       # First we get the build itself
-      Pkg::Util::Execution.capture3(%(find #{include_paths.map { |path| "pkg/#{Pkg::Config.project}/**/#{path}" }.join(' ') } | sort > include_file))
+      Pkg::Util::Execution.capture3(%(find #{include_paths.map { |path| "pkg/#{Pkg::Config.project}/**/#{path}" }.join(' ')} | sort > include_file))
       Pkg::Util::Execution.capture3(%(mkdir -p tmp && tar -T include_file -cf - | (cd ./tmp && tar -xf -)))
 
       # Then we find grab the appropriate meta-data only
-      Pkg::Util::Execution.capture3(%(find #{include_paths.map { |path| "pkg/#{Pkg::Config.project}-latest/#{path}" unless path.include? "repos" }.join(' ') } | sort > include_file_latest))
+      Pkg::Util::Execution.capture3(%(find #{include_paths.map { |path| "pkg/#{Pkg::Config.project}-latest/#{path}" unless path.include? "repos" }.join(' ')} | sort > include_file_latest))
 
-      #include /repos in the include_file_latest so we correctly include the symlink in the final file list to ship
+      # include /repos in the include_file_latest so we correctly include the symlink in the final file list to ship
       Pkg::Util::Execution.capture3(%(echo "pkg/#{Pkg::Config.project}-latest/repos" >> include_file_latest))
       Pkg::Util::Execution.capture3(%(tar -T include_file_latest -cf - | (cd ./tmp && tar -xf -)))
 

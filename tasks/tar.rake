@@ -1,7 +1,6 @@
 namespace :package do
   desc "Create a source tar archive"
   task :tar => [:clean] do
-
     if Pkg::Config.pre_tar_task
       Pkg::Util::RakeUtils.invoke_task(Pkg::Config.pre_tar_task)
     end
@@ -25,4 +24,3 @@ end
 namespace :pl do
   task :tar => ["package:tar"]
 end
-

@@ -1,9 +1,7 @@
 # Utility methods for handling network calls and interactions
 
 module Pkg::Util::Net
-
   class << self
-
     # This simple method does an HTTP get of a URI and writes it to a file
     # in a slightly more platform agnostic way than curl/wget
     def fetch_uri(uri, target)
@@ -24,6 +22,7 @@ module Pkg::Util::Net
       return true if hostname == host
 
       fail "Error: #{hostname} does not match #{host}" if options[:required]
+
       return nil
     end
 
@@ -68,7 +67,7 @@ module Pkg::Util::Net
         capture_output: false,
         extra_options: '',
         fail_fast: true,
-        trace: false
+        trace: false,
       }
       options = option_defaults.merge(user_options)
 
@@ -112,13 +111,14 @@ module Pkg::Util::Net
     ###
     ### Deprecated method implemented as a shim to the new `remote_execute` method
     ###
-    def remote_ssh_cmd(target, command, capture_output = false, extra_options = '', fail_fast = true, trace = false)  # rubocop:disable Metrics/ParameterLists
+    def remote_ssh_cmd(target, command, capture_output = false, extra_options = '', fail_fast = true, trace = false) # rubocop:disable Metrics/ParameterLists
       puts "Warn: \"remote_ssh_cmd\" call in packaging is deprecated. Use \"remote_execute\" instead."
       remote_execute(target, command, {
                        capture_output: capture_output,
                        extra_options: extra_options,
                        fail_fast: fail_fast,
-                       trace: trace })
+                       trace: trace,
+                     })
     end
 
     # Construct a valid rsync command
@@ -149,7 +149,8 @@ module Pkg::Util::Net
         target_path: nil,
         target_host: nil,
         extra_flags: nil,
-        dryrun: false }.merge(opts)
+        dryrun: false,
+      }.merge(opts)
       origin = Pathname.new(origin_path)
       target = options[:target_path] || origin.parent
 
@@ -187,9 +188,10 @@ module Pkg::Util::Net
         target_path: nil,
         target_host: nil,
         extra_flags: nil,
-        dryrun: ENV['DRYRUN'] }.merge(opts.delete_if { |_, value| value.nil? })
+        dryrun: ENV['DRYRUN'],
+      }.merge(opts.delete_if { |_, value| value.nil? })
 
-      stdout, _, _ = Pkg::Util::Execution.capture3(rsync_cmd(source, options), true)
+      stdout, = Pkg::Util::Execution.capture3(rsync_cmd(source, options), true)
       stdout
     end
 
@@ -223,7 +225,7 @@ module Pkg::Util::Net
       s3cmd = Pkg::Util::Tool.check_tool('s3cmd')
 
       if Pkg::Util::File.file_exists?(File.join(ENV['HOME'], '.s3cfg'))
-        stdout, _, _ = Pkg::Util::Execution.capture3("#{s3cmd} sync #{flags.join(' ')} '#{source}' s3://#{target_bucket}/#{target_directory}/")
+        stdout, = Pkg::Util::Execution.capture3("#{s3cmd} sync #{flags.join(' ')} '#{source}' s3://#{target_bucket}/#{target_directory}/")
         stdout
       else
         fail "#{File.join(ENV['HOME'], '.s3cfg')} does not exist. It is required to ship files using s3cmd."
@@ -277,9 +279,9 @@ module Pkg::Util::Net
         '--silent',
         '--location',
         '--write-out "%{http_code}"',
-        '--output /dev/null'
+        '--output /dev/null',
       ]
-      stdout, _ = Pkg::Util::Net.curl_form_data(uri, data)
+      stdout, = Pkg::Util::Net.curl_form_data(uri, data)
       stdout
     end
 
@@ -294,11 +296,11 @@ module Pkg::Util::Net
     def remote_set_ownership(host, owner, group, files)
       remote_cmd = %W(
         for file in #{files.join(" ")}; do
-          if [[ -d $file ]] || ! `lsattr $file | grep -q '\\-i\\-'`; then
-            sudo chown #{owner}:#{group} $file;
-          else
-            echo \"Info: $file is immutable\";
-          fi;
+        if [[ -d $file ]] || ! `lsattr $file | grep -q '\\-i\\-'`; then
+        sudo chown #{owner}:#{group} $file;
+        else
+        echo \"Info: $file is immutable\";
+        fi;
         done
       ).join(' ')
 
@@ -308,11 +310,11 @@ module Pkg::Util::Net
     def remote_set_permissions(host, permissions, files)
       remote_cmd = %W(
         for file in #{files.join(" ")}; do
-          if [[ -d $file ]] || ! `lsattr $file | grep -q '\\-i\\-'`; then
-            sudo chmod #{permissions} $file;
-          else
-            echo \"Info: $file is immutable\";
-          fi;
+        if [[ -d $file ]] || ! `lsattr $file | grep -q '\\-i\\-'`; then
+        sudo chmod #{permissions} $file;
+        else
+        echo \"Info: $file is immutable\";
+        fi;
         done
       ).join(' ')
       Pkg::Util::Net.remote_execute(host, remote_cmd)
@@ -367,7 +369,8 @@ module Pkg::Util::Net
       CMD
 
       _, err = Pkg::Util::Net.remote_execute(
-           Pkg::Config.staging_server, cmd, { capture_output: true })
+        Pkg::Config.staging_server, cmd, { capture_output: true }
+      )
       $stderr.puts err
     end
 

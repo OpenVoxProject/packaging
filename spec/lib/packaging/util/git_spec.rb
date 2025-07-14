@@ -26,6 +26,7 @@ describe 'Pkg::Util::Git' do
   context '#tag' do
     let(:version) { '1.2.3' }
     let(:gpg_key) { '1231242354asdfawd' }
+
     around do |example|
       prev_gpg_key = Pkg::Config.gpg_key
       Pkg::Config.gpg_key = gpg_key
@@ -48,6 +49,7 @@ describe 'Pkg::Util::Git' do
     let(:project) { 'fooproj' }
     let(:string) { 'bar' }
     let(:temp) { '/other/path/to/place' }
+
     around do |example|
       prev_project = Pkg::Config.project
       prev_version = Pkg::Config.version

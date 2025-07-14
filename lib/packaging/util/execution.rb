@@ -1,9 +1,7 @@
 # Utility methods for handling system calls and interactions
 
 module Pkg::Util::Execution
-
   class << self
-
     # Alias to $?.success? that makes success? slightly easier to test and stub
     # If immediately run, $? will not be instanciated, so only call success? if
     # $? exists, otherwise return nil

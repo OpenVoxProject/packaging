@@ -63,7 +63,7 @@ module Pkg::Gem
       internal_mirror_api_key_name = 'artifactory_api_key'
       ship_to_rubygems(file, {
                          host: Pkg::Config.internal_gem_host,
-                         key: internal_mirror_api_key_name
+                         key: internal_mirror_api_key_name,
                        })
     end
   end

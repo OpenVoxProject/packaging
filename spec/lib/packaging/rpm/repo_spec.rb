@@ -8,11 +8,11 @@ describe "Pkg::Rpm::Repo" do
   let(:base_url)      { "http://#{builds_server}/#{project}/#{ref}" }
   let(:mocks)         { ["el-5-i386", "el-5-x86_64", "el-5-SRPMS"] }
   let(:wget_results)  {
-                        mocks.map do |mock|
-                          dist, version, arch = mock.split('-')
-                          "http://#{builds_server}/#{project}/#{ref}/repos/#{dist}/#{version}/products/#{arch}/repodata/"
-                        end.join("\n")
-                      }
+    mocks.map do |mock|
+      dist, version, arch = mock.split('-')
+      "http://#{builds_server}/#{project}/#{ref}/repos/#{dist}/#{version}/products/#{arch}/repodata/"
+    end.join("\n")
+  }
   let(:wget_garbage)  { "\nother things\n and an index\nhttp://somethingelse.com" }
   let(:repo_configs)  { mocks.map { |mock| "pkg/repo_configs/rpm/pl-#{project}-#{ref}-#{mock}.repo" } }
 
@@ -36,19 +36,19 @@ describe "Pkg::Rpm::Repo" do
 
   describe "#generate_repo_configs" do
     it "fails if wget isn't available" do
-      Pkg::Util::Tool.stub(:find_tool).with("wget", {:required => true}) {false}
-      expect {Pkg::Rpm::Repo.generate_repo_configs}.to raise_error(RuntimeError)
+      Pkg::Util::Tool.stub(:find_tool).with("wget", { :required => true }) { false }
+      expect { Pkg::Rpm::Repo.generate_repo_configs }.to raise_error(RuntimeError)
     end
 
     it "warns if there are no rpm repos available for the build" do
-      Pkg::Util::Tool.should_receive(:find_tool).with("wget", {:required => true}).and_return(wget)
+      Pkg::Util::Tool.should_receive(:find_tool).with("wget", { :required => true }).and_return(wget)
       Pkg::Util::Execution.should_receive(:capture3).with("#{wget} --spider -r -l 5 --no-parent #{base_url}/repos/ 2>&1").and_return("")
       Pkg::Rpm::Repo.should_receive(:warn).with("No rpm repos were found to generate configs from!")
       Pkg::Rpm::Repo.generate_repo_configs
     end
 
     it "writes the expected repo configs to disk" do
-      Pkg::Util::Tool.should_receive(:find_tool).with("wget", {:required => true}).and_return(wget)
+      Pkg::Util::Tool.should_receive(:find_tool).with("wget", { :required => true }).and_return(wget)
       Pkg::Util::Execution.should_receive(:capture3).with("#{wget} --spider -r -l 5 --no-parent #{base_url}/repos/ 2>&1").and_return(wget_results + wget_garbage)
       wget_results.split.each do |result|
         cur_result = result.chomp('repodata/')
@@ -69,15 +69,15 @@ describe "Pkg::Rpm::Repo" do
 
   describe "#retrieve_repo_configs" do
     it "fails if wget isn't available" do
-      Pkg::Util::Tool.stub(:find_tool).with("wget", {:required => true}) {false}
-      expect {Pkg::Rpm::Repo.generate_repo_configs}.to raise_error(RuntimeError)
+      Pkg::Util::Tool.stub(:find_tool).with("wget", { :required => true }) { false }
+      expect { Pkg::Rpm::Repo.generate_repo_configs }.to raise_error(RuntimeError)
     end
 
     it "fails if there are no deb repos available for the build" do
-      Pkg::Util::Tool.should_receive(:find_tool).with("wget", {:required => true}).and_return(wget)
+      Pkg::Util::Tool.should_receive(:find_tool).with("wget", { :required => true }).and_return(wget)
       FileUtils.should_receive(:mkdir_p).with("pkg/repo_configs").and_return(true)
       Pkg::Util::Execution.should_receive(:capture3).with("#{wget} -r -np -nH --cut-dirs 3 -P pkg/repo_configs --reject 'index*' #{base_url}/repo_configs/rpm/").and_raise(RuntimeError)
-      expect {Pkg::Rpm::Repo.retrieve_repo_configs}.to raise_error(RuntimeError, /Couldn't retrieve rpm yum repo configs/)
+      expect { Pkg::Rpm::Repo.retrieve_repo_configs }.to raise_error(RuntimeError, /Couldn't retrieve rpm yum repo configs/)
     end
   end
 
@@ -98,14 +98,14 @@ describe "Pkg::Rpm::Repo" do
     let(:pkg_directories) { ['el-6-i386', 'el/7/x86_64'] }
 
     it "makes a repo in the target directory" do
-      File.stub(:join) {artifact_directory}
+      File.stub(:join) { artifact_directory }
       Pkg::Repo.should_receive(:directories_that_contain_packages).and_return(pkg_directories)
       Pkg::Repo.should_receive(:populate_repo_directory)
       Pkg::Rpm::Repo.should_receive(:repo_creation_command).and_return(command)
       Pkg::Util::Net.should_receive(:remote_execute).with(Pkg::Config.distribution_server, command)
       Pkg::Rpm::Repo.should_receive(:generate_repo_configs)
       Pkg::Rpm::Repo.should_receive(:ship_repo_configs)
-      Pkg::Util::Net.should_receive(:remote_execute).with(Pkg::Config.distribution_server, "rm -f #{artifact_directory}/repos/.lock" )
+      Pkg::Util::Net.should_receive(:remote_execute).with(Pkg::Config.distribution_server, "rm -f #{artifact_directory}/repos/.lock")
       Pkg::Rpm::Repo.create_remote_repos
     end
   end

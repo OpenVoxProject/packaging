@@ -9,7 +9,6 @@
 # release of 3.1.0, checkout 3.1.0 locally before retrieving.
 #
 
-
 namespace :pl do
   namespace :jenkins do
     desc "Retrieve packages from the distribution server. Check out commit to retrieve"

@@ -32,6 +32,7 @@ module Pkg::Util::Misc
       unless data.is_a?(Hash)
         raise "Hash required. Got '#{data.class}' when parsing '#{file}'"
       end
+
       # We explicity return data here b/c the unless clause above will cause the
       # Function to return nil.
       #               -Sean P. M. 05/11/2016

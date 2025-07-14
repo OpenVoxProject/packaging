@@ -74,7 +74,6 @@ if Pkg::Config.build_pe
             Rake::Task["pe:remote:apt"].reenable
             Rake::Task["pe:remote:apt"].invoke(target_path, dist)
           end
-
         end
       end
 
@@ -98,7 +97,6 @@ if Pkg::Config.build_pe
       base_path = Pkg::Config.apt_target_path
 
       puts "Shipping all built artifacts to to archive directories on #{Pkg::Config.apt_host}"
-
 
       Pkg::Config.deb_build_targets.each do |target|
         dist, arch = target.match(/(.*)-(.*)/)[1, 2]
@@ -137,7 +135,6 @@ if Pkg::Config.build_pe
     namespace :remote do
       desc "Update remote rpm repodata for PE on #{Pkg::Config.yum_host}"
       task :update_yum_repo => "pl:fetch" do
-
         # Paths to the repos.
         repo_base_path = Pkg::Config.yum_target_path
 
@@ -172,10 +169,10 @@ if Pkg::Config.build_pe
           fi
         eos
         stdout, stderr = Pkg::Util::Net.remote_execute(
-                  Pkg::Config.apt_host,
-                  cmd,
-                  { capture_output: true }
-                )
+          Pkg::Config.apt_host,
+          cmd,
+          { capture_output: true },
+        )
 
         output = stdout.to_s + stderr.to_s
 
@@ -190,13 +187,13 @@ if Pkg::Config.build_pe
 
         puts "Cleaning up apt repo 'incoming' dir on #{Pkg::Config.apt_host}"
         Pkg::Util::Net.remote_execute(Pkg::Config.apt_host, "rm -r #{incoming_dir}")
-
       end
 
       # Throw more tires on the fire
       desc "Remotely link shipped rpm packages into feature repo on #{Pkg::Config.yum_host}"
       task :link_shipped_rpms_to_feature_repo => "pl:fetch" do
         next if Pkg::Config.pe_feature_branch
+
         repo_base_path = Pkg::Config.yum_target_path
         feature_repo_path = Pkg::Config.yum_target_path(true)
         pkgs = FileList['pkg/pe/rpm/**/*.rpm'].select { |path| path.gsub!('pkg/pe/rpm/', '') }
@@ -211,6 +208,7 @@ if Pkg::Config.build_pe
       desc "Remotely link shipped deb packages into feature repo on #{Pkg::Config.apt_host}"
       task :link_shipped_debs_to_feature_repo => "pl:fetch" do
         next if Pkg::Config.pe_feature_branch
+
         base_path = Pkg::Config.apt_target_path
         feature_base_path = Pkg::Config.apt_target_path(true)
         pkgs = FileList["pkg/pe/deb/**/*.deb"].select { |path| path.gsub!('pkg/pe/deb/', '') }

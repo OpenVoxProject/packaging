@@ -11,7 +11,7 @@ module Pkg::Sign::Msi
     Pkg::Util::Net.remote_execute(ssh_host_string, "mkdir -p C:/#{work_dir}")
     msis = Dir.glob("#{target_dir}/windows*/**/*.msi")
     Pkg::Util::Net.rsync_to(msis.join(" "), rsync_host_string, "/cygdrive/c/#{work_dir}",
-                           extra_flags: ["--ignore-existing --relative"])
+                            extra_flags: ["--ignore-existing --relative"])
 
     # Please Note:
     # We are currently adding two signatures to the msi.
@@ -114,9 +114,9 @@ CMD
     Pkg::Util::Net.remote_execute(
       ssh_host_string,
       sign_command,
-      { fail_fast: false }
+      { fail_fast: false },
     )
-    msis.each do | msi |
+    msis.each do |msi|
       Pkg::Util::Net.rsync_from("/cygdrive/c/#{work_dir}/#{msi}", rsync_host_string, File.dirname(msi))
     end
     Pkg::Util::Net.remote_execute(ssh_host_string, "if [ -d '/cygdrive/c/#{work_dir}' ]; then rm -rf '/cygdrive/c/#{work_dir}'; fi")

@@ -11,7 +11,7 @@ describe 'Pkg::Paths' do
 
       ['artifacts/ubuntu-16.04-i386/puppetserver_5.0.1-0.1SNAPSHOT.2017.07.27T2346puppetlabs1.debian.tar.gz', 'ubuntu', '16.04'] => 'source',
       ['artifacts/deb/jessie/PC1/puppetserver_5.0.1.master.orig.tar.gz', 'debian', '8'] => 'source',
-      ['artifacts/el/6/PC1/SRPMS/puppetserver-5.0.1.master-0.1SNAPSHOT.2017.08.18T0951.el6.src.rpm', 'el', '6'] => 'SRPMS'
+      ['artifacts/el/6/PC1/SRPMS/puppetserver-5.0.1.master-0.1SNAPSHOT.2017.08.18T0951.el6.src.rpm', 'el', '6'] => 'SRPMS',
     }
     arch_transformations.each do |path_array, arch|
       it "should correctly return #{arch} for #{path_array[0]}" do
@@ -144,6 +144,7 @@ describe 'Pkg::Paths' do
         expect(Pkg::Paths.artifacts_path('ubuntu-18.04-amd64'))
           .to eq('artifacts/FUTURE-puppet7/bionic')
       end
+
       it 'should be correct for focal' do
         expect(Pkg::Paths.artifacts_path('ubuntu-20.04-amd64'))
           .to eq('artifacts/FUTURE-puppet7/focal')
@@ -264,22 +265,27 @@ describe 'Pkg::Paths' do
       allow(Pkg::Config).to receive(:nonfinal_yum_repo_path).and_return(fake_yum_nightly_repo_path)
       allow(Pkg::Config).to receive(:nonfinal_apt_repo_path).and_return(fake_apt_nightly_repo_path)
     end
+
     it 'returns yum_repo_path for rpms' do
       expect(Pkg::Paths.remote_repo_base('el-7-x86_64'))
         .to eq(fake_yum_repo_path)
     end
+
     it 'returns apt_repo_path for debs' do
       expect(Pkg::Paths.remote_repo_base('ubuntu-18.04-amd64'))
         .to eq(fake_apt_repo_path)
     end
+
     it 'returns nonfinal_yum_repo_path for nonfinal rpms' do
       expect(Pkg::Paths.remote_repo_base('fedora-31-x86_64', nonfinal: true))
         .to eq(fake_yum_nightly_repo_path)
     end
+
     it 'returns nonfinal_apt_repo_path for nonfinal debs' do
       expect(Pkg::Paths.remote_repo_base('debian-9-amd64', nonfinal: true))
         .to eq(fake_apt_nightly_repo_path)
     end
+
     it 'fails if neither tag nor package_format is provided' do
       expect { Pkg::Paths.remote_repo_base }
         .to raise_error(/Pkg::Paths.remote_repo_base must have/)
@@ -308,9 +314,8 @@ describe 'Pkg::Paths' do
           .to eq('/opt/repository/apt/pool/bionic/puppet6/p/puppet-agent')
         expect(Pkg::Paths.apt_package_base_path('debian-9-amd64', 'puppet6', 'bolt-server'))
           .to eq('/opt/repository/apt/pool/stretch/puppet6/b/bolt-server')
-
-
       end
+
       it 'returns the appropriate nonfinal repo path' do
         allow(Pkg::Paths).to receive(:remote_repo_base).and_return('/opt/repository-nightlies/apt')
         expect(Pkg::Paths.apt_package_base_path('ubuntu-18.04-amd64', 'puppet6-nightly',
@@ -330,6 +335,7 @@ describe 'Pkg::Paths' do
         expect(Pkg::Paths.apt_package_base_path('ubuntu-20.04-amd64', 'FUTURE-puppet7', 'puppet-agent'))
           .to eq('/opt/repository/apt/FUTURE-puppet7/pool/focal/p/puppet-agent')
       end
+
       it 'returns the appropriate nonfinal repo path' do
         allow(Pkg::Paths).to receive(:remote_repo_base).and_return('/opt/repository-nightlies/apt')
         expect(Pkg::Paths.apt_package_base_path('debian-10-amd64', 'FUTURE-puppet7-nightly', 'pdk', true))
@@ -354,22 +360,27 @@ describe 'Pkg::Paths' do
         allow(Pkg::Config).to receive(:nonfinal_yum_repo_path).and_return(nonfinal_yum_repo_path)
         allow(Pkg::Config).to receive(:nonfinal_apt_repo_path).and_return(nonfinal_apt_repo_path)
       end
+
       it 'returns the appropriate link path for rpm release packages' do
         expect(Pkg::Paths.release_package_link_path('sles-12-ppc64le'))
           .to eq("#{yum_repo_path}/#{repo_name}-release-sles-12.noarch.rpm")
       end
+
       it 'returns the appropriate link path for deb release packages' do
         expect(Pkg::Paths.release_package_link_path('ubuntu-16.04-amd64'))
           .to eq("#{apt_repo_path}/#{repo_name}-release-xenial.deb")
       end
+
       it 'returns the appropriate link path for nonfinal rpm release packages' do
         expect(Pkg::Paths.release_package_link_path('el-7-x86_64', true))
           .to eq("#{nonfinal_yum_repo_path}/#{nonfinal_repo_name}-release-el-7.noarch.rpm")
       end
+
       it 'returns the appropriate link path for nonfinal deb release packages' do
         expect(Pkg::Paths.release_package_link_path('debian-9-i386', true))
           .to eq("#{nonfinal_apt_repo_path}/#{nonfinal_repo_name}-release-stretch.deb")
       end
+
       it 'returns nil for package formats that do not have release packages' do
         expect(Pkg::Paths.release_package_link_path('osx-10.15-x86_64')).to be_nil
         expect(Pkg::Paths.release_package_link_path('osx-11-x86_64')).to be_nil
@@ -392,22 +403,27 @@ describe 'Pkg::Paths' do
         allow(Pkg::Config).to receive(:nonfinal_yum_repo_path).and_return(nonfinal_yum_repo_path)
         allow(Pkg::Config).to receive(:nonfinal_apt_repo_path).and_return(nonfinal_apt_repo_path)
       end
+
       it 'returns the appropriate link path for rpm release packages' do
         expect(Pkg::Paths.release_package_link_path('sles-12-ppc64le'))
           .to eq("#{yum_repo_path}/#{repo_name}-release-sles-12.noarch.rpm")
       end
+
       it 'returns the appropriate link path for deb release packages' do
         expect(Pkg::Paths.release_package_link_path('ubuntu-20.04-amd64'))
           .to eq("#{apt_repo_path}/#{repo_name}-release-focal.deb")
       end
+
       it 'returns the appropriate link path for nonfinal rpm release packages' do
         expect(Pkg::Paths.release_package_link_path('el-8-x86_64', true))
           .to eq("#{nonfinal_yum_repo_path}/#{nonfinal_repo_name}-release-el-8.noarch.rpm")
       end
+
       it 'returns the appropriate link path for nonfinal deb release packages' do
         expect(Pkg::Paths.release_package_link_path('debian-10-i386', true))
           .to eq("#{nonfinal_apt_repo_path}/#{nonfinal_repo_name}-release-buster.deb")
       end
+
       it 'returns nil for package formats that do not have release packages' do
         expect(Pkg::Paths.release_package_link_path('osx-10.15-x86_64')).to be_nil
         expect(Pkg::Paths.release_package_link_path('osx-11-x86_64')).to be_nil

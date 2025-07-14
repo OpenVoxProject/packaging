@@ -119,7 +119,7 @@ namespace :pl do
         when /gem/ then "gem"
         when /tar/ then "tar"
         else raise "Could not determine build type for #{build_task}"
-      end
+                   end
 
       # Create a string of metrics to send to Jenkins for data analysis
       dist = case build_type
@@ -135,7 +135,7 @@ namespace :pl do
         when /sles/ then "sles"
         when /tar/ then "tar"
         else raise "Could not determine build type for #{build_task}"
-      end
+             end
 
       if Pkg::Config.pe_version
         metrics = "#{ENV['USER']}~#{Pkg::Config.version}~#{Pkg::Config.pe_version}~#{dist}~#{Pkg::Config.team}"
@@ -152,7 +152,7 @@ namespace :pl do
                     { "name" => "PROJECT_BUNDLE",   "file"  => "file1" },
                     { "name" => "PROJECT",          "value" => "#{Pkg::Config.project}" },
                     { "name" => "BUILD_TYPE",       "label" => "#{build_type}" },
-                    { "name" => "METRICS",          "value" => "#{metrics}" }]
+                    { "name" => "METRICS",          "value" => "#{metrics}" },]
 
       # Initialize the args array that will hold all of the arguments we pass
       # to the curl utility method.
@@ -172,14 +172,14 @@ namespace :pl do
       # Construct the remaining form arguments. For visual clarity, params that are tied
       # together are on the same line.
       #
-      args <<  [
-      "-Fname=BUILD_PROPERTIES", "-Ffile0=@#{properties}",
-      "-Fname=PROJECT_BUNDLE",   "-Ffile1=@#{bundle}",
-      "-Fname=PROJECT",          "-Fvalue=#{Pkg::Config.project}",
-      "-Fname=BUILD_TYPE",       "-Fvalue=#{build_type}",
-      "-Fname=METRICS",          "-Fvalue=#{metrics}",
-      "-FSubmit=Build",
-      "-Fjson=#{json.to_json}",
+      args << [
+        "-Fname=BUILD_PROPERTIES", "-Ffile0=@#{properties}",
+        "-Fname=PROJECT_BUNDLE",   "-Ffile1=@#{bundle}",
+        "-Fname=PROJECT",          "-Fvalue=#{Pkg::Config.project}",
+        "-Fname=BUILD_TYPE",       "-Fvalue=#{build_type}",
+        "-Fname=METRICS",          "-Fvalue=#{metrics}",
+        "-FSubmit=Build",
+        "-Fjson=#{json.to_json}",
       ]
 
       # We have several arrays inside args by now, flatten it up.
@@ -555,13 +555,13 @@ namespace :pl do
       end
 
       # Assemble the JSON string for the JSON parameter
-      json = JSON.generate("parameter" => [{ "name" => "SHA", "value"  => "#{Pkg::Config.ref}" }])
+      json = JSON.generate("parameter" => [{ "name" => "SHA", "value" => "#{Pkg::Config.ref}" }])
 
       # Assemble our arguments to the post
       args = [
-      "-Fname=SHA", "-Fvalue=#{Pkg::Config.ref}",
-      "-Fjson=#{json.to_json}",
-      "-FSubmit=Build"
+        "-Fname=SHA", "-Fvalue=#{Pkg::Config.ref}",
+        "-Fjson=#{json.to_json}",
+        "-FSubmit=Build",
       ]
 
       _, retval = Pkg::Util::Net.curl_form_data(uri, args)

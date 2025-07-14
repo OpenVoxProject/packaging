@@ -10,7 +10,8 @@ module Pkg::Ship::EZbake
       ezbake_manifest_target_path = nil
       if File.exist?(ezbake_manifest_source_path)
         ezbake_manifest_target_path = File.join(
-          target_directory, "#{Pkg::Config.ref}.#{manifest_name}")
+          target_directory, "#{Pkg::Config.ref}.#{manifest_name}"
+        )
         FileUtils.cp(ezbake_manifest_source_path, ezbake_manifest_target_path)
       end
 
@@ -19,13 +20,14 @@ module Pkg::Ship::EZbake
       ezbake_yaml_target_path = nil
       if File.exist?(ezbake_yaml_source_path)
         ezbake_yaml_target_path = File.join(
-          target_directory, "#{Pkg::Config.ref}.#{yaml_name}")
+          target_directory, "#{Pkg::Config.ref}.#{yaml_name}"
+        )
         FileUtils.cp(ezbake_yaml_source_path, ezbake_yaml_target_path)
       end
 
       return {
         manifest_path: ezbake_manifest_target_path,
-        yaml_path: ezbake_yaml_target_path
+        yaml_path: ezbake_yaml_target_path,
       }
     end
   end

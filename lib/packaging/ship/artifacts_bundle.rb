@@ -15,7 +15,6 @@ require 'fileutils'
 module Pkg::Ship::ArtifactsBundle
   class << self
     def create(build_directory, artifacts_directory = 'artifacts')
-
       # If the artifacts directory exists, don't rebuild it.
       if Dir.exist?(artifacts_directory)
         puts "Info: '#{artifacts_directory}' directory exists. Not rebuilding it."
@@ -102,6 +101,7 @@ module Pkg::Ship::ArtifactsBundle
 
     def artifacts_tarball_exist?
       return artifacts_tarball_name if File.readable?(artifacts_tarball_name)
+
       return false
     end
   end
