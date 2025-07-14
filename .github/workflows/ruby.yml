@@ -1,3 +1,4 @@
+---
 name: Ruby
 
 on:
@@ -7,16 +8,29 @@ on:
       - main
 
 jobs:
-  build:
+  rubocop_and_matrix:
+    runs-on: ubuntu-24.04
+    outputs:
+      ruby: ${{ steps.ruby.outputs.versions }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.4"
+          bundler-cache: true
+      - name: Run linter
+        run: bundle exec rake rubocop
+      - id: ruby
+        uses: voxpupuli/ruby-version@v1
 
-    runs-on: ubuntu-latest
+  build:
+    runs-on: ubuntu-24.04
+    needs: rubocop_and_matrix
     strategy:
       fail-fast: false
       matrix:
-        ruby:
-          - 3.4
-          - 3.3
-          - 3.2
+        ruby: ${{ fromJSON(needs.rubocop_and_matrix.outputs.ruby) }}
     steps:
     - uses: actions/checkout@v4
     - name: Set up Ruby
@@ -25,5 +39,3 @@ jobs:
         ruby-version: ${{ matrix.ruby }}
         bundler-cache: true
     - run: bundle exec rspec spec --color --format documentation --order random
-    - name: Rubocop
-      run: bundle exec rake rubocop
