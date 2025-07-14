@@ -59,7 +59,7 @@ module Pkg::Util::File
 
     def erb_string(erbfile, b = binding)
       template = File.read(erbfile)
-      message  = ERB.new(template, nil, "-")
+      message  = ERB.new(template, trim_mode: '-')
       message.result(b)
     end
 
