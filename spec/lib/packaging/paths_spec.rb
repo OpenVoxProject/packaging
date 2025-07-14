@@ -371,9 +371,9 @@ describe 'Pkg::Paths' do
           .to eq("#{nonfinal_apt_repo_path}/#{nonfinal_repo_name}-release-stretch.deb")
       end
       it 'returns nil for package formats that do not have release packages' do
-        expect(Pkg::Paths.release_package_link_path('osx-10.15-x86_64')).to eq(nil)
-        expect(Pkg::Paths.release_package_link_path('osx-11-x86_64')).to eq(nil)
-        expect(Pkg::Paths.release_package_link_path('windows-2012-x86')).to eq(nil)
+        expect(Pkg::Paths.release_package_link_path('osx-10.15-x86_64')).to be_nil
+        expect(Pkg::Paths.release_package_link_path('osx-11-x86_64')).to be_nil
+        expect(Pkg::Paths.release_package_link_path('windows-2012-x86')).to be_nil
       end
     end
 
@@ -409,9 +409,9 @@ describe 'Pkg::Paths' do
           .to eq("#{nonfinal_apt_repo_path}/#{nonfinal_repo_name}-release-buster.deb")
       end
       it 'returns nil for package formats that do not have release packages' do
-        expect(Pkg::Paths.release_package_link_path('osx-10.15-x86_64')).to eq(nil)
-        expect(Pkg::Paths.release_package_link_path('osx-11-x86_64')).to eq(nil)
-        expect(Pkg::Paths.release_package_link_path('windows-2012-x86')).to eq(nil)
+        expect(Pkg::Paths.release_package_link_path('osx-10.15-x86_64')).to be_nil
+        expect(Pkg::Paths.release_package_link_path('osx-11-x86_64')).to be_nil
+        expect(Pkg::Paths.release_package_link_path('windows-2012-x86')).to be_nil
       end
     end
   end

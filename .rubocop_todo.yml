@@ -786,14 +786,6 @@ RSpec/AnyInstance:
   Exclude:
     - 'spec/lib/packaging/tar_spec.rb'
 
-# Offense count: 11
-# This cop supports unsafe autocorrection (--autocorrect-all).
-RSpec/BeEq:
-  Exclude:
-    - 'spec/lib/packaging/paths_spec.rb'
-    - 'spec/lib/packaging/util/git_tag_spec.rb'
-    - 'spec/lib/packaging/util/ship_spec.rb'
-
 # Offense count: 2
 RSpec/BeforeAfterAll:
   Exclude:
@@ -1084,7 +1076,7 @@ RSpec/UnspecifiedException:
     - 'spec/lib/packaging/paths_spec.rb'
     - 'spec/lib/packaging/platforms_spec.rb'
 
-# Offense count: 5
+# Offense count: 4
 # Configuration parameters: IgnoreNameless, IgnoreSymbolicNames.
 RSpec/VerifiedDoubles:
   Exclude:
