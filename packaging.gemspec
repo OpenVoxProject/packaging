@@ -18,6 +18,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency('rspec', ['>= 2.14.1', '< 4'])
   gem.add_development_dependency('rubocop', ['~> 0.24.1'])
   gem.add_development_dependency('pry-byebug')
+  gem.add_runtime_dependency('base64', ['< 0.4'])
   gem.add_runtime_dependency('rake', ['>= 12.3'])
   gem.add_runtime_dependency('artifactory', ['~> 3'])
   gem.add_runtime_dependency('release-metrics')
