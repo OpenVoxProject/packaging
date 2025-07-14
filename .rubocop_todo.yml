@@ -998,7 +998,7 @@ RSpec/NoExpectationExample:
     - 'spec/lib/packaging/util/net_spec.rb'
     - 'spec/lib/packaging_spec.rb'
 
-# Offense count: 15
+# Offense count: 14
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: EnforcedStyle.
 # SupportedStyles: not_to, to_not

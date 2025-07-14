@@ -11,26 +11,26 @@ describe "Pkg::Util::Git_tag" do
   context "sha?" do
     it "sets ref type as a sha when passed a sha" do
       git_tag = Pkg::Util::Git_tag.new("https://github.com/puppetlabs/leatherman.git", "4eef05389ebf418b62af17406c7f9f13fa51f975")
-      expect(git_tag.sha?).to be(true)
+      expect(git_tag.sha?).to be true
     end
   end
 
   context "branch?" do
     it "sets ref type as a branch when passed a branch" do
       git_tag = Pkg::Util::Git_tag.new("https://github.com/puppetlabs/leatherman.git", "main")
-      expect(git_tag.branch?).to be(true)
+      expect(git_tag.branch?).to be true
     end
   end
 
   context "tag?" do
     it "sets ref type as a tag when passed a tag" do
       git_tag = Pkg::Util::Git_tag.new("https://github.com/puppetlabs/leatherman.git", "tags/0.6.2")
-      expect(git_tag.tag?).to be(true)
+      expect(git_tag.tag?).to be true
     end
 
     it "sets ref type as a tag when passed a fully qualified tag" do
       git_tag = Pkg::Util::Git_tag.new("https://github.com/puppetlabs/leatherman.git", "refs/tags/0.6.2")
-      expect(git_tag.tag?).to be(true)
+      expect(git_tag.tag?).to be true
     end
   end
 end
