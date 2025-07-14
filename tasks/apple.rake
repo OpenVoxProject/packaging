@@ -57,19 +57,19 @@ def make_directory_tree
     mkdir_p(val)
   end
 
-  if File.exists?('ext/osx/postflight.erb')
+  if File.exist?('ext/osx/postflight.erb')
     Pkg::Util::File.erb_file 'ext/osx/postflight.erb', "#{@working_tree["scripts"]}/postinstall", false, :binding => binding
   end
 
-  if File.exists?('ext/osx/preflight.erb')
+  if File.exist?('ext/osx/preflight.erb')
     Pkg::Util::File.erb_file 'ext/osx/preflight.erb', "#{@working_tree["scripts"]}/preinstall", false, :binding => binding
   end
 
-  if File.exists?('ext/osx/prototype.plist.erb')
+  if File.exist?('ext/osx/prototype.plist.erb')
     Pkg::Util::File.erb_file 'ext/osx/prototype.plist.erb', "#{@scratch}/prototype.plist", false, :binding => binding
   end
 
-  if File.exists?('ext/packaging/static_artifacts/PackageInfo.plist')
+  if File.exist?('ext/packaging/static_artifacts/PackageInfo.plist')
     cp 'ext/packaging/static_artifacts/PackageInfo.plist', "#{@scratch}/PackageInfo.plist"
   end
 
@@ -154,13 +154,13 @@ def pack_source
 
   # Setup a preinstall script and replace variables in the files with
   # the correct paths.
-  if File.exists?("#{@working_tree['scripts']}/preinstall")
+  if File.exist?("#{@working_tree['scripts']}/preinstall")
     chmod(0755, "#{@working_tree['scripts']}/preinstall")
     sh "sudo chown root:wheel #{@working_tree['scripts']}/preinstall"
   end
 
   # Setup a postinstall from from the erb created earlier
-  if File.exists?("#{@working_tree['scripts']}/postinstall")
+  if File.exist?("#{@working_tree['scripts']}/postinstall")
     chmod(0755, "#{@working_tree['scripts']}/postinstall")
     sh "sudo chown root:wheel #{@working_tree['scripts']}/postinstall"
   end
@@ -251,7 +251,7 @@ namespace :package do
       bench = Benchmark.realtime do
         # Test for pkgbuild binary
         fail "pkgbuild must be installed." unless \
-          File.exists?(PKGBUILD)
+          File.exist?(PKGBUILD)
 
         make_directory_tree
         pack_source
