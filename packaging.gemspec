@@ -14,7 +14,6 @@ Gem::Specification.new do |gem|
 
   gem.required_ruby_version = '>= 3.2.0'
 
-  gem.add_development_dependency('pry-byebug')
   gem.add_development_dependency('rspec', ['>= 2.14.1', '< 4'])
   gem.add_development_dependency('voxpupuli-rubocop', ['~> 4.1.0'])
   gem.add_dependency('artifactory', ['~> 3'])
