@@ -1,6 +1,5 @@
 # Emit useful messages for tasks that have been moved or removed.
 
-
 deprecation_message_winston = "The ticket generation tasks have moved. These now live in Winston: https://github.com/puppetlabs/winston"
 
 namespace :pl do

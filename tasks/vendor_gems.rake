@@ -46,6 +46,7 @@ if Pkg::Config.pre_tar_task
 
         def level=(level)
           raise ArgumentError unless LEVELS.include?(level.to_s)
+
           @level = level
         end
 
@@ -59,7 +60,6 @@ if Pkg::Config.pre_tar_task
         ensure
           @level = old_level
         end
-
       end
 
       class RGProxy < ::Gem::SilentUI
@@ -76,7 +76,6 @@ if Pkg::Config.pre_tar_task
           end
         end
       end
-
 
       # Cache all the gems locally without using the shared GEM_PATH
       Bundler.settings[:cache_all] = true

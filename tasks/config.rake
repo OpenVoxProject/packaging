@@ -25,7 +25,7 @@ namespace :config do
         "expects one or more space, comma, or semicolon delimited value; treated as an array"
       when :bool
         "expects a boolean value"
-      end
+             end
 
       msg = "#{values[:var]}: #{values[:envvar]}"
       msg += " (#{type})" if type

@@ -16,6 +16,7 @@ module Pkg::Paths
     if source_formats.find { |fmt| path =~ /#{fmt}$/ }
       return Pkg::Platforms.get_attribute_for_platform_version(platform, version, :source_architecture)
     end
+
     arches.find { |a| path.include?(package_arch(platform, a)) } || arches[0]
   rescue
     arches.find { |a| path.include?(package_arch(platform, a)) } || arches[0]
@@ -98,6 +99,7 @@ module Pkg::Paths
 
   def link_name(nonfinal = false)
     return Pkg::Config.nonfinal_repo_link_target if nonfinal
+
     return Pkg::Config.repo_link_target
   end
 
@@ -170,7 +172,7 @@ module Pkg::Paths
   # Given platform information, create symlink target (base_path) and link path in the
   # form of a 2-element array
   def artifacts_base_path_and_link_path(platform_tag, prefix = 'artifacts', is_nonfinal = false)
-    platform_name, _ = Pkg::Platforms.parse_platform_tag(platform_tag)
+    platform_name, = Pkg::Platforms.parse_platform_tag(platform_tag)
     package_format = Pkg::Platforms.package_format_for_tag(platform_tag)
 
     path_data = {
@@ -179,17 +181,17 @@ module Pkg::Paths
       package_format: package_format,
       platform_name: platform_name,
       platform_tag: platform_tag,
-      prefix: prefix
+      prefix: prefix,
     }
 
     return [
       construct_base_path(path_data),
-      construct_link_path(path_data)
+      construct_link_path(path_data),
     ]
   end
 
   def artifacts_path(platform_tag, path_prefix = 'artifacts', nonfinal = false)
-    base_path, _ = artifacts_base_path_and_link_path(platform_tag, path_prefix, nonfinal)
+    base_path, = artifacts_base_path_and_link_path(platform_tag, path_prefix, nonfinal)
     platform, version, architecture = Pkg::Platforms.parse_platform_tag(platform_tag)
     package_format = Pkg::Platforms.package_format_for_tag(platform_tag)
 
@@ -279,19 +281,19 @@ module Pkg::Paths
     package_format ||= Pkg::Platforms.package_format_for_tag(platform_tag)
 
     repo_base = case package_format
-    when 'rpm'
-      nonfinal ? Pkg::Config.nonfinal_yum_repo_path : Pkg::Config.yum_repo_path
-    when 'deb'
-      nonfinal ? Pkg::Config.nonfinal_apt_repo_path : Pkg::Config.apt_repo_path
-    when 'dmg'
-      nonfinal ? Pkg::Config.nonfinal_dmg_path : Pkg::Config.dmg_path
-    when 'swix'
-      nonfinal ? Pkg::Config.nonfinal_swix_path : Pkg::Config.swix_path
-    when 'msi'
-      nonfinal ? Pkg::Config.nonfinal_msi_path : Pkg::Config.msi_path
-    else
-      raise "Can't determine remote repo base path for package format '#{package_format}'."
-    end
+                when 'rpm'
+                  nonfinal ? Pkg::Config.nonfinal_yum_repo_path : Pkg::Config.yum_repo_path
+                when 'deb'
+                  nonfinal ? Pkg::Config.nonfinal_apt_repo_path : Pkg::Config.apt_repo_path
+                when 'dmg'
+                  nonfinal ? Pkg::Config.nonfinal_dmg_path : Pkg::Config.dmg_path
+                when 'swix'
+                  nonfinal ? Pkg::Config.nonfinal_swix_path : Pkg::Config.swix_path
+                when 'msi'
+                  nonfinal ? Pkg::Config.nonfinal_msi_path : Pkg::Config.msi_path
+                else
+                  raise "Can't determine remote repo base path for package format '#{package_format}'."
+                end
 
     # normalize the path for things shipping to the downloads server
     if repo_base.match(/^\/opt\/downloads\/\w+$/)
@@ -306,7 +308,7 @@ module Pkg::Paths
       fail "Can't determine path for non-debian platform #{platform_tag}."
     end
 
-    platform, version, _ = Pkg::Platforms.parse_platform_tag(platform_tag)
+    platform, version, = Pkg::Platforms.parse_platform_tag(platform_tag)
     code_name = Pkg::Platforms.codename_for_platform_version(platform, version)
     remote_repo_path = remote_repo_base(platform_tag, nonfinal: nonfinal)
 
@@ -322,7 +324,7 @@ module Pkg::Paths
     if %w(puppet7 puppet7-nightly
           puppet6 puppet6-nightly
           puppet5 puppet5-nightly
-          puppet  puppet-nightly
+          puppet puppet-nightly
           puppet-tools).include? repo_name
       return File.join(remote_repo_path, 'pool', code_name, repo_name, project[0], project)
     end
@@ -331,7 +333,7 @@ module Pkg::Paths
   end
 
   def release_package_link_path(platform_tag, nonfinal = false)
-    platform, version, _ = Pkg::Platforms.parse_platform_tag(platform_tag)
+    platform, version, = Pkg::Platforms.parse_platform_tag(platform_tag)
     package_format = Pkg::Platforms.package_format_for_tag(platform_tag)
     case package_format
     when 'rpm'
@@ -352,6 +354,7 @@ module Pkg::Paths
     matches = path.match(/(\d+\.\d+|master|main)\/(\w+)/)
     regex_for_substitution = /[\.\/]/
     fail "Error: Could not determine Debian Component from path #{path}" if matches.nil?
+
     base_component = matches[1]
     component_qualifier = matches[2]
     full_component = "#{base_component}/#{component_qualifier}"
@@ -360,17 +363,18 @@ module Pkg::Paths
       full_component.gsub!(regex_for_substitution, '_')
     end
     return base_component if component_qualifier == 'repos'
+
     return full_component
   end
 
-  #for ubuntu-20.04-aarch64, debian package architecture is arm64
+  # for ubuntu-20.04-aarch64, debian package architecture is arm64
   def package_arch(platform, arch)
     if platform == 'ubuntu' && arch == 'aarch64'
       return 'arm64'
     end
+
     arch
   end
 
   private :package_arch
-
 end

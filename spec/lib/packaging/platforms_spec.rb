@@ -30,7 +30,7 @@ describe 'Pkg::Platforms' do
     end
 
     it 'should raise an error if given a nonexistent platform' do
-      expect{Pkg::Platforms.versions_for_platform('notaplatform') }.to raise_error
+      expect { Pkg::Platforms.versions_for_platform('notaplatform') }.to raise_error
     end
   end
 
@@ -47,7 +47,7 @@ describe 'Pkg::Platforms' do
     end
 
     it 'should fail if given nil as a codename' do
-      expect{Pkg::Platforms.codename_to_platform_version(nil)}.to raise_error
+      expect { Pkg::Platforms.codename_to_platform_version(nil) }.to raise_error
     end
   end
 
@@ -101,12 +101,12 @@ describe 'Pkg::Platforms' do
       it 'should return a hash of platform info' do
         expect(Pkg::Platforms.platform_lookup(platform)).to be_instance_of(Hash)
       end
-  
+
       it 'should include at least arch and package format keys' do
         expect(Pkg::Platforms.platform_lookup(platform).keys).to include(:architectures)
         expect(Pkg::Platforms.platform_lookup(platform).keys).to include(:package_format)
       end
-    end 
+    end
   end
 
   describe '#get_attribute' do
@@ -159,7 +159,7 @@ describe 'Pkg::Platforms' do
 
     fail_cases.each do |platform_tag|
       it "fails out for #{platform_tag}" do
-        expect { Pkg::Platforms.parse_platform_tag(platform_tag)}.to raise_error
+        expect { Pkg::Platforms.parse_platform_tag(platform_tag) }.to raise_error
       end
     end
   end

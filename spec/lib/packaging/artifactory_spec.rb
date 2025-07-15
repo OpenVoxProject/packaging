@@ -3,7 +3,6 @@ require 'spec_helper'
 require 'packaging/artifactory'
 
 describe 'artifactory.rb' do
-
   project = 'puppet-agent'
   project_version = 'ashawithlettersandnumbers'
   default_repo_name = 'testing'
@@ -59,7 +58,7 @@ describe 'artifactory.rb' do
       :repo_subdirectories => "#{default_repo_name}/#{project}/#{project_version}/el-6-x86_64",
       :package_format => 'rpm',
       :package_name => 'path/to/a/el/6/package/puppet-agent-5.3.1.34.gf65f9ef-1.el6.x86_64.rpm',
-      :all_package_names => ['puppet-agent-5.3.1.34.gf65f9ef-1.el6.x86_64.rpm', 'puppet-agent-extras-5.3.1.34.gf65f9ef-1.el6.x86_64.rpm']
+      :all_package_names => ['puppet-agent-5.3.1.34.gf65f9ef-1.el6.x86_64.rpm', 'puppet-agent-extras-5.3.1.34.gf65f9ef-1.el6.x86_64.rpm'],
     },
     'ubuntu-16.04-amd64' => {
       :toplevel_repo => 'debian__local',
@@ -67,7 +66,7 @@ describe 'artifactory.rb' do
       :codename => 'xenial',
       :arch => 'amd64',
       :package_name => 'path/to/a/xenial/package/puppet-agent_5.3.1.34.gf65f9ef-1xenial_amd64.deb',
-      :all_package_names => ['puppet-agent_5.3.1.34.gf65f9ef-1xenial_amd64.deb', 'puppet-agent-extras_5.3.1.34.gf65f9ef-1xenial_amd64.deb']
+      :all_package_names => ['puppet-agent_5.3.1.34.gf65f9ef-1xenial_amd64.deb', 'puppet-agent-extras_5.3.1.34.gf65f9ef-1xenial_amd64.deb'],
     },
     'debian-10-amd64' => {
       :toplevel_repo => 'debian__local',
@@ -75,41 +74,41 @@ describe 'artifactory.rb' do
       :codename => 'buster',
       :arch => 'all',
       :package_name => 'path/to/a/buster/package/puppetdb_5.3.1.34.gf65f9ef-1buster_all.deb',
-      :all_package_names => ['puppetdb_5.3.1.34.gf65f9ef-1buster_all.deb', 'puppetdb-termini_5.3.1.34.gf65f9ef-1buster_all.deb']
+      :all_package_names => ['puppetdb_5.3.1.34.gf65f9ef-1buster_all.deb', 'puppetdb-termini_5.3.1.34.gf65f9ef-1buster_all.deb'],
     },
     'windows-2012-x86' => {
       :toplevel_repo => 'generic',
       :repo_subdirectories => "#{default_repo_name}/#{project}/#{project_version}/windows-x86",
       :package_name => 'path/to/a/windows/package/puppet-agent-5.3.1.34-x86.msi',
-      :all_package_names => ['puppet-agent-5.3.1.34-x86.msi','puppet-agent-extras-5.3.1.34-x86.msi']
+      :all_package_names => ['puppet-agent-5.3.1.34-x86.msi', 'puppet-agent-extras-5.3.1.34-x86.msi'],
     },
     'windowsfips-2012-x64' => {
       :toplevel_repo => 'generic',
       :repo_subdirectories => "#{default_repo_name}/#{project}/#{project_version}/windowsfips-x64",
       :package_name => 'path/to/a/windowsfips/package/puppet-agent-5.3.1.34-x64.msi',
-      :all_package_names => ['puppet-agent-5.3.1.34-x64.msi','puppet-agent-extras-5.3.1.34-x64.msi']
+      :all_package_names => ['puppet-agent-5.3.1.34-x64.msi', 'puppet-agent-extras-5.3.1.34-x64.msi'],
     },
     'osx-10.15-x86_64' => {
       :toplevel_repo => 'generic',
       :repo_subdirectories => "#{default_repo_name}/#{project}/#{project_version}/osx-10.15-x86_64",
       :package_name => 'path/to/an/osx/10.15/package/puppet-agent-5.3.1.34.gf65f9ef-1.osx10.15.dmg',
-      :all_package_names => ['puppet-agent-5.3.1.34.gf65f9ef-1.osx10.15.dmg', 'puppet-agent-extras-5.3.1.34.gf65f9ef-1.osx10.15.dmg']
+      :all_package_names => ['puppet-agent-5.3.1.34.gf65f9ef-1.osx10.15.dmg', 'puppet-agent-extras-5.3.1.34.gf65f9ef-1.osx10.15.dmg'],
     },
     'osx-11-x86_64' => {
       :toplevel_repo => 'generic',
       :repo_subdirectories => "#{default_repo_name}/#{project}/#{project_version}/osx-11-x86_64",
       :package_name => 'path/to/an/osx/11/package/puppet-agent-5.3.1.34.gf65f9ef-1.osx11.dmg',
-      :all_package_names => ['puppet-agent-5.3.1.34.gf65f9ef-1.osx11.dmg', 'puppet-agent-extras-5.3.1.34.gf65f9ef-1.osx11.dmg']
+      :all_package_names => ['puppet-agent-5.3.1.34.gf65f9ef-1.osx11.dmg', 'puppet-agent-extras-5.3.1.34.gf65f9ef-1.osx11.dmg'],
     },
     'solaris-10-sparc' => {
       :toplevel_repo => 'generic',
       :repo_subdirectories => "#{default_repo_name}/#{project}/#{project_version}/solaris-10-sparc",
       :package_name => 'path/to/a/solaris/10/package/puppet-agent-5.3.1.34.gf65f9ef-1.sparc.pkg.gz',
-      :all_package_names => ['puppet-agent-5.3.1.34.gf65f9ef-1.sparc.pkg.gz']
+      :all_package_names => ['puppet-agent-5.3.1.34.gf65f9ef-1.sparc.pkg.gz'],
     },
   }
 
-  let(:artifact) { Pkg::ManageArtifactory.new(project, project_version, {:repo_base => default_repo_name, :artifactory_uri => artifactory_uri})}
+  let(:artifact) { Pkg::ManageArtifactory.new(project, project_version, { :repo_base => default_repo_name, :artifactory_uri => artifactory_uri }) }
 
   around(:each) do |example|
     original_artifactory_api_key = ENV['ARTIFACTORY_API_KEY']
@@ -123,24 +122,24 @@ describe 'artifactory.rb' do
       if platform_tag_data[:codename]
         it 'returns the expected repo name and paths by default, prepending `pool` for debian-ish platforms' do
           expect(artifact.location_for(platform_tag)).to match_array([
-            platform_tag_data[:toplevel_repo],
-            platform_tag_data[:repo_subdirectories],
-          ])
+                                                                       platform_tag_data[:toplevel_repo],
+                                                                       platform_tag_data[:repo_subdirectories],
+                                                                     ])
         end
       else
         it 'returns the expected repo name and paths by default' do
           expect(artifact.location_for(platform_tag)).to match_array([
-            platform_tag_data[:toplevel_repo],
-            platform_tag_data[:repo_subdirectories],
-          ])
+                                                                       platform_tag_data[:toplevel_repo],
+                                                                       platform_tag_data[:repo_subdirectories],
+                                                                     ])
         end
       end
 
       it 'returns the correct paths for the passed in format' do
         expect(artifact.location_for('generic')).to match_array([
-          'generic',
-          File.join(default_repo_name, project, project_version),
-        ])
+                                                                  'generic',
+                                                                  File.join(default_repo_name, project, project_version),
+                                                                ])
       end
     end
 
@@ -152,7 +151,7 @@ describe 'artifactory.rb' do
       it 'fails if it cannot find a valid platform name' do
         new_platform_data = platform_data
         new_platform_data.delete_if { |k| k.match(platform_tag) }
-        expect{artifact.package_name(new_platform_data, platform_tag)}.to raise_error
+        expect { artifact.package_name(new_platform_data, platform_tag) }.to raise_error
       end
     end
 
@@ -169,7 +168,7 @@ describe 'artifactory.rb' do
       it 'fails if it cannot find a valid platform name' do
         new_platform_data = platform_data
         new_platform_data.delete_if { |k| k.match(platform_tag) }
-        expect{artifact.package_name(new_platform_data, platform_tag)}.to raise_error
+        expect { artifact.package_name(new_platform_data, platform_tag) }.to raise_error
       end
     end
 
@@ -178,7 +177,7 @@ describe 'artifactory.rb' do
         if platform_tag_data[:codename]
           expect(artifact.deb_list_contents(platform_tag)).to eq("deb #{artifactory_uri}/#{platform_tag_data[:toplevel_repo].chomp('/pool')} #{platform_tag_data[:codename]} #{platform_tag_data[:repo_subdirectories]}")
         else
-          expect{artifact.deb_list_contents(platform_tag)}.to raise_error
+          expect { artifact.deb_list_contents(platform_tag) }.to raise_error
         end
       end
     end
@@ -188,7 +187,7 @@ describe 'artifactory.rb' do
         if platform_tag_data[:package_format] == 'rpm'
           expect(artifact.rpm_repo_contents(platform_tag)).to include("baseurl=#{artifactory_uri}\/#{platform_tag_data[:toplevel_repo]}\/#{platform_tag_data[:repo_subdirectories]}")
         else
-          expect{artifact.rpm_repo_contents(platform_tag)}.to raise_error
+          expect { artifact.rpm_repo_contents(platform_tag) }.to raise_error
         end
       end
     end
@@ -197,14 +196,14 @@ describe 'artifactory.rb' do
       it "returns the correct contents for the deploy properties for #{platform_tag}" do
         if platform_tag_data[:codename]
           expect(artifact.deploy_properties(platform_tag, File.basename(platform_tag_data[:package_name]))).to include({
-            'deb.distribution' => platform_tag_data[:codename],
-            'deb.component' => platform_tag_data[:repo_subdirectories],
-            'deb.architecture' => platform_tag_data[:arch]
-          })
+                                                                                                                         'deb.distribution' => platform_tag_data[:codename],
+                                                                                                                         'deb.component' => platform_tag_data[:repo_subdirectories],
+                                                                                                                         'deb.architecture' => platform_tag_data[:arch],
+                                                                                                                       })
         else
           expect(artifact.deploy_properties(platform_tag, File.basename(platform_tag_data[:package_name]))).not_to include({
-            'deb.component' => platform_tag_data[:repo_subdirectories]
-          })
+                                                                                                                             'deb.component' => platform_tag_data[:repo_subdirectories],
+                                                                                                                           })
         end
       end
     end

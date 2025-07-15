@@ -1,6 +1,5 @@
 namespace :pl do
   namespace :remote do
-
     desc "Move packages from repo paths to archive staging paths"
     task :stage_archives, [:yum_directories, :apt_directories, :downloads_directories] => 'pl:fetch' do |_t, args|
       yum_directories = args.yum_directories ? args.yum_directories.split(' ') : []

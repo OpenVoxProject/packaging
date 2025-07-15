@@ -3,11 +3,12 @@ require 'spec_helper'
 describe "#Pkg::Repo" do
   let(:platform_repo_stub) do
     [
-      {"name"=>"el-4-i386", "repo_location"=>"repos/el/4/**/i386"},
-      {"name"=>"el-5-i386", "repo_location"=>"repos/el/5/**/i386"},
-      {"name"=>"el-6-i386", "repo_location"=>"repos/el/6/**/i386"}
+      { "name" => "el-4-i386", "repo_location" => "repos/el/4/**/i386" },
+      { "name" => "el-5-i386", "repo_location" => "repos/el/5/**/i386" },
+      { "name" => "el-6-i386", "repo_location" => "repos/el/6/**/i386" },
     ]
   end
+
   describe "#create_signed_repo_archive" do
     it "should change to the correct dir" do
       allow(Pkg::Util::Tool).to receive(:check_tool).and_return("tarcommand")
@@ -54,7 +55,7 @@ describe "#Pkg::Repo" do
       allow(Pkg::Util::File).to receive(:empty_dir?).and_return(true)
       ENV['FAIL_ON_MISSING_TARGET'] = 'true'
 
-      expect{Pkg::Repo.create_signed_repo_archive('/path', 'project-debian-6-i386', 'version')}.to raise_error(RuntimeError, 'Error: missing packages under /path')
+      expect { Pkg::Repo.create_signed_repo_archive('/path', 'project-debian-6-i386', 'version') }.to raise_error(RuntimeError, 'Error: missing packages under /path')
     end
 
     it "should only warn if ENV['FAIL_ON_MISSING_TARGET'] is false and empty_dir? is true" do
@@ -66,7 +67,7 @@ describe "#Pkg::Repo" do
       allow(Pkg::Util::File).to receive(:empty_dir?).and_return(true)
       ENV['FAIL_ON_MISSING_TARGET'] = "false"
 
-      expect{Pkg::Repo.create_signed_repo_archive("/path", "project-debian-6-i386", "version")}.not_to raise_error
+      expect { Pkg::Repo.create_signed_repo_archive("/path", "project-debian-6-i386", "version") }.not_to raise_error
     end
 
     it 'should invoke tar correctly' do
@@ -124,7 +125,7 @@ describe "#Pkg::Repo" do
     end
 
     it 'should fail if required params are nil' do
-      expect{ Pkg::Repo.update_repo(remote_host, repo_command, { :repo_path => repo_path }) }.to raise_error(RuntimeError, /Missing required argument 'repo_name'/)
+      expect { Pkg::Repo.update_repo(remote_host, repo_command, { :repo_path => repo_path }) }.to raise_error(RuntimeError, /Missing required argument 'repo_name'/)
     end
 
     it 'should execute command if optional params are nil' do

@@ -1,7 +1,6 @@
 # Utility methods for handling system binaries
 
 module Pkg::Util::Tool
-
   #   Set up utility methods for handling system binaries
   #
   class << self
@@ -26,16 +25,15 @@ module Pkg::Util::Tool
         return location if FileTest.executable? location
       end
       fail "#{tool} tool not found...exiting" if args[:required]
+
       return nil
     end
 
     alias :has_tool :find_tool
-
   end
 
   #   Set up paths to system tools we use in the packaging repo
   #   no matter what distribution we're packaging for.
 
   GIT = Pkg::Util::Tool.check_tool('git')
-
 end

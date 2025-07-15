@@ -34,7 +34,7 @@ describe 'Pkg::Util::Version' do
       '5.9.7-rc4-65-gabc1234' => ['5.9.7.65.gabc1234', '0.1rc4'],
       '5.9.7-rc4-65-gabc1234-dirty' => ['5.9.7.65.gabc1234', '0.1rc4dirty'],
       '4.99.0-dirty' => ['4.99.0', '0.1dirty'],
-      '4.99.0-56-gabc1234-dirty' => ['4.99.0.56.gabc1234', '0.1dirty']
+      '4.99.0-56-gabc1234-dirty' => ['4.99.0.56.gabc1234', '0.1dirty'],
     }
     version_hash.each do |pre, post|
       before do
@@ -55,7 +55,7 @@ describe 'Pkg::Util::Version' do
       '2017.6.5.3',
       '0.6.8',
       '2068.532.6',
-      '96.5'
+      '96.5',
     ]
 
     non_final_versions = [
@@ -63,7 +63,7 @@ describe 'Pkg::Util::Version' do
       '1.0.0-658-gabc1234',
       '5.0.0.master.SNAPSHOT.2017.05.16T1357',
       '5.9.7-rc4',
-      '4.99.0-56-dirty'
+      '4.99.0-56-dirty',
     ]
 
     final_versions.each do |version|
@@ -110,7 +110,7 @@ describe 'Pkg::Util::Version' do
       '5.3.0-18-gfbddc8f-dirty' => '5.3.0-18-dirty',
       '0.7.0-rc1' => '0.7.0-rc1',
       '0.7.0-rc1-63-g51ccc51' => '0.7.0-rc1-63',
-      '0.7.0-rc1-63-g51ccc51-dirty'=> '0.7.0-rc1-63-dirty',
+      '0.7.0-rc1-63-g51ccc51-dirty' => '0.7.0-rc1-63-dirty',
     }
     versions.each do |describe, reformatted|
       it "correctly returns #{reformatted} when #{describe} is the git describe version" do

@@ -3,8 +3,8 @@ require 'spec_helper'
 describe "Pkg::Util::RakeUtils" do
   let(:foo_defined?) { Rake::Task.task_defined?(:foo) }
   let(:bar_defined?) { Rake::Task.task_defined?(:bar) }
-  let(:define_foo)   { body = proc{}; Rake::Task.define_task(:foo, &body) }
-  let(:define_bar)   { body = proc{}; Rake::Task.define_task(:bar, &body) }
+  let(:define_foo)   { body = proc {}; Rake::Task.define_task(:foo, &body) }
+  let(:define_bar)   { body = proc {}; Rake::Task.define_task(:bar, &body) }
 
   before(:each) do
     if foo_defined?
@@ -15,11 +15,12 @@ describe "Pkg::Util::RakeUtils" do
   describe "#task_defined?" do
     context "given a Rake::Task task name" do
       it "should return true if the task exists" do
-        Rake::Task.stub(:task_defined?).with(:foo) {true}
+        Rake::Task.stub(:task_defined?).with(:foo) { true }
         expect(Pkg::Util::RakeUtils.task_defined?(:foo)).to be true
       end
+
       it "should return false if the task does not exist" do
-        Rake::Task.stub(:task_defined?).with(:foo) {false}
+        Rake::Task.stub(:task_defined?).with(:foo) { false }
         expect(Pkg::Util::RakeUtils.task_defined?(:foo)).to be false
       end
     end

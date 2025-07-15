@@ -6,6 +6,7 @@ module Pkg::Util::Ship
   def collect_packages(pkg_exts, excludes = []) # rubocop:disable Metrics/MethodLength
     pkgs = pkg_exts.map { |ext| Dir.glob(ext) }.flatten
     return [] if pkgs.empty?
+
     excludes.each do |exclude|
       pkgs.delete_if { |p| p.match(exclude) }
     end if excludes
@@ -62,7 +63,8 @@ module Pkg::Util::Ship
       excludes: [],
       chattr: true,
       platform_independent: false,
-      nonfinal: false }.merge(opts)
+      nonfinal: false,
+    }.merge(opts)
 
     # First find the packages to be shipped. We must find them before moving
     # to our temporary staging directory
@@ -90,7 +92,7 @@ module Pkg::Util::Ship
           File.join(tmpdir, pkg),
           staging_server,
           remote_basepath,
-          extra_flags: extra_flags
+          extra_flags: extra_flags,
         )
 
         Pkg::Util::Net.remote_set_ownership(staging_server, 'root', 'release',
@@ -106,7 +108,7 @@ module Pkg::Util::Ship
   def ship_rpms(local_staging_directory, remote_path, opts = {})
     things_to_ship = [
       "#{local_staging_directory}/**/*.rpm",
-      "#{local_staging_directory}/**/*.srpm"
+      "#{local_staging_directory}/**/*.srpm",
     ]
     ship_pkgs(things_to_ship, Pkg::Config.yum_staging_server, remote_path, opts)
   end
@@ -117,7 +119,7 @@ module Pkg::Util::Ship
       "#{local_staging_directory}/**/*.orig.tar.gz",
       "#{local_staging_directory}/**/*.dsc",
       "#{local_staging_directory}/**/*.deb",
-      "#{local_staging_directory}/**/*.changes"
+      "#{local_staging_directory}/**/*.changes",
     ]
     ship_pkgs(things_to_ship, Pkg::Config.apt_signing_server, remote_path, opts)
   end
@@ -139,11 +141,10 @@ module Pkg::Util::Ship
       Pkg::Util::Net.remote_create_latest_symlink(
         Pkg::Config.project,
         Pkg::Paths.artifacts_path(platform_tag, remote_path, opts[:nonfinal]),
-        'dmg'
+        'dmg',
       )
     end
   end
-
 
   def ship_swix(local_staging_directory, remote_path, opts = {})
     ship_pkgs(["#{local_staging_directory}/**/*.swix"], Pkg::Config.swix_staging_server, remote_path, opts)

@@ -4,7 +4,7 @@ module Pkg::Ship::Artifactory
   class << self
     def ship(local_build_directory, remote_artifacts_directory)
       unless Pkg::Config.project
-        fail 'Error: "project" is unset. It must be set in build_defaults.yaml or '\
+        fail 'Error: "project" is unset. It must be set in build_defaults.yaml or ' \
              'the "PROJECT_OVERRIDE" environment variable.'
       end
 
@@ -26,13 +26,13 @@ module Pkg::Ship::Artifactory
         Pkg::Config.jenkins_repo_path,
         Pkg::Config.project,
         Pkg::Config.ref,
-        remote_artifacts_directory
+        remote_artifacts_directory,
       )
       Pkg::Util::Net.rsync_to(
         ref_yaml_file,
         Pkg::Config.distribution_server,
         "#{remote_ref_yaml_directory}/#{File.basename(ref_yaml_file)}",
-        extra_flags: []
+        extra_flags: [],
       )
 
       # Now back to our Artifactory-specific work
@@ -44,7 +44,8 @@ module Pkg::Ship::Artifactory
       # Like that we'll still allow overwriting of yaml and json files.
       permitted_files = overwrite_guardian(artifactory, local_artifacts_directory)
       artifacts_tarball = Pkg::Ship::ArtifactsBundle.create_tarball(
-        local_artifacts_directory, permitted_files)
+        local_artifacts_directory, permitted_files
+      )
       artifactory.deploy_archive(artifacts_tarball)
     end
 

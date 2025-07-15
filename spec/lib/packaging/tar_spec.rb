@@ -4,32 +4,34 @@ require 'spec_helper'
 describe "tar.rb" do
   let(:project) { "packaging" }
   let(:version) { "1.2.3" }
-  let(:files)   { [ "a", "b", "c" ] }
+  let(:files)   { ["a", "b", "c"] }
   let(:templates) do
     [
       "ext/redhat/spec.erb",
       { "source" => "ext/debian/control.erb", "target" => "ext/debian/not-a-control-file" },
       "ext/debian/changelog.erb",
-      "ext/packaging/thing.erb"
+      "ext/packaging/thing.erb",
     ]
   end
   let(:expanded_templates) do
     [
       "#{PROJECT_ROOT}/ext/redhat/spec.erb",
       { "source" => "ext/debian/control.erb", "target" => "ext/debian/not-a-control-file" },
-      "#{PROJECT_ROOT}/ext/debian/changelog.erb"
+      "#{PROJECT_ROOT}/ext/debian/changelog.erb",
     ]
   end
+
   before(:each) do
     Pkg::Config.config_from_hash(
       {
-        :templates      => templates,
-        :project        => project,
-        :version        => version,
-        :files          => files,
-        :project_root   => PROJECT_ROOT,
-        :packaging_root => "ext/packaging"
-      })
+        :templates => templates,
+        :project => project,
+        :version => version,
+        :files => files,
+        :project_root => PROJECT_ROOT,
+        :packaging_root => "ext/packaging",
+      },
+    )
   end
 
   describe '#initialize' do

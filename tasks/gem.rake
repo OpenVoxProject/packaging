@@ -99,6 +99,7 @@ end
 
 def unknown_gems_platform?(platform)
   return true if platform.os == "unknown"
+
   false
 end
 
@@ -118,7 +119,7 @@ def create_platform_specific_gems
         "development"
       else
         fail "Platform specific gem dependency type must be 'gem_runtime_dependencies' or 'gem_development_dependencies', not '#{type}'"
-      end
+          end
       gems.each do |gem, version|
         spec = add_gem_dependency(:spec => spec, :gem => gem, :version => version, :type => t)
       end

@@ -24,7 +24,8 @@ module Pkg::Util
   require 'packaging/util/ship'
 
   def self.boolean_value(var)
-    return true if var == true || ( var.is_a?(String) && ( var.downcase == 'true' || var.downcase =~ /^y$|^yes$/))
+    return true if var == true || (var.is_a?(String) && (var.downcase == 'true' || var.downcase =~ /^y$|^yes$/))
+
     return false
   end
 
@@ -55,6 +56,7 @@ module Pkg::Util
   # @raise [RuntimeError] raises an exception if the variable is not set and is required
   def self.check_var(varname, var)
     fail "Requires #{varname} be set!" if var.nil?
+
     var
   end
 
@@ -95,6 +97,7 @@ module Pkg::Util
     answer = Pkg::Util.get_input
     return true if answer =~ /^y$|^yes$/
     return false if answer =~ /^n$|^no$/
+
     puts "Nope, try something like yes or no or y or n, etc:"
     Pkg::Util.ask_yes_or_no
   end
@@ -112,9 +115,9 @@ module Pkg::Util
 
   def self.filter_configs(filter = nil)
     return Pkg::Config.instance_values.select { |key, _| key.match(/#{filter}/) } if filter
+
     Pkg::Config.instance_values
   end
-
 
   # Construct a probably-correct (or correct-enough) URI for
   # tools like ssh or rsync. Currently lacking support for intuitive

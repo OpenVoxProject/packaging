@@ -11,6 +11,7 @@ require File.join(SPECDIR, '..', 'lib', 'packaging.rb')
 
 def load_task(name)
   return false if (@loaded ||= {})[name]
+
   load File.join(SPECDIR, '..', 'tasks', name)
   @loaded[name] = true
 end

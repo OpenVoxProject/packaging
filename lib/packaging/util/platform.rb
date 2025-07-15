@@ -1,5 +1,6 @@
 module Pkg::Util::Platform
   module_function
+
   ##########################################################################
   # DEPRECATED METHODS
   #

@@ -10,33 +10,32 @@ describe "Pkg::Util::File" do
   let(:dirs)       { ["foo"] }
   let(:empty_dirs) { ["bar"] }
 
-
   describe "#untar_into" do
     before :each do
       Pkg::Util::Tool.stub(:find_tool).with('tar', :required => true) { tar }
     end
 
     it "raises an exception if the source doesn't exist" do
-      Pkg::Util::File.should_receive(:file_exists?).with(source, {:required => true}).and_raise(RuntimeError)
+      Pkg::Util::File.should_receive(:file_exists?).with(source, { :required => true }).and_raise(RuntimeError)
       Pkg::Util::Execution.should_not_receive(:capture3)
       expect { Pkg::Util::File.untar_into(source) }.to raise_error(RuntimeError)
     end
 
     it "unpacks the tarball to the current directory if no target is passed" do
-      Pkg::Util::File.should_receive(:file_exists?).with(source, {:required => true}) { true }
+      Pkg::Util::File.should_receive(:file_exists?).with(source, { :required => true }) { true }
       Pkg::Util::Execution.should_receive(:capture3).with("#{tar}   -xf #{source}")
       Pkg::Util::File.untar_into(source)
     end
 
     it "unpacks the tarball to the current directory with options if no target is passed" do
-      Pkg::Util::File.should_receive(:file_exists?).with(source, {:required => true}) { true }
+      Pkg::Util::File.should_receive(:file_exists?).with(source, { :required => true }) { true }
       Pkg::Util::Execution.should_receive(:capture3).with("#{tar} #{options}  -xf #{source}")
       Pkg::Util::File.untar_into(source, nil, options)
     end
 
     it "unpacks the tarball into the target" do
       File.stub(:capture3ist?).with(source) { true }
-      Pkg::Util::File.should_receive(:file_exists?).with(source, {:required => true}) { true }
+      Pkg::Util::File.should_receive(:file_exists?).with(source, { :required => true }) { true }
       Pkg::Util::File.should_receive(:file_writable?).with(target) { true }
       Pkg::Util::Execution.should_receive(:capture3).with("#{tar}  -C #{target} -xf #{source}")
       Pkg::Util::File.untar_into(source, target)
@@ -44,7 +43,7 @@ describe "Pkg::Util::File" do
 
     it "unpacks the tarball into the target with options passed" do
       File.stub(:capture3ist?).with(source) { true }
-      Pkg::Util::File.should_receive(:file_exists?).with(source, {:required => true}) { true }
+      Pkg::Util::File.should_receive(:file_exists?).with(source, { :required => true }) { true }
       Pkg::Util::File.should_receive(:file_writable?).with(target) { true }
       Pkg::Util::Execution.should_receive(:capture3).with("#{tar} #{options} -C #{target} -xf #{source}")
       Pkg::Util::File.untar_into(source, target, options)

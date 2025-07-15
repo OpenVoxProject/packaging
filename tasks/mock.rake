@@ -21,6 +21,7 @@ def mock_artifact(mock_config, cmd_args, mockfile)
   unless mock = Pkg::Util::Tool.find_tool('mock')
     raise "mock is required for building srpms with mock. Please install mock and try again."
   end
+
   randomize = Pkg::Config.random_mockroot
   configdir = nil
   basedir = File.join('var', 'lib', 'mock')
@@ -37,7 +38,6 @@ def mock_artifact(mock_config, cmd_args, mockfile)
 
     # Return a FileList of the build artifacts
     return FileList[File.join(result_dir, '*.rpm')]
-
   rescue RuntimeError => error
     build_log = File.join(result_dir, 'build.log')
     root_log  = File.join(result_dir, 'root.log')
@@ -79,6 +79,7 @@ def mock_srpm(mock_config, spec, sources, mockfile, defines = nil)
   unless srpms.size == 1
     fail "#{srpms} contains an unexpected number of artifacts."
   end
+
   srpms[0]
 end
 
@@ -142,10 +143,9 @@ def rpm_family_and_version
       "#{rpm_el_family}-#{rpm_el_version}"
     end
   else
-    Pkg::Config.final_mocks.split.map { |mock| "#{mock_el_family(mock)}-#{mock_el_ver(mock) }" }
+    Pkg::Config.final_mocks.split.map { |mock| "#{mock_el_family(mock)}-#{mock_el_ver(mock)}" }
   end
 end
-
 
 # Checks to see if the pe agnostic config template is in place.
 # If it is then the mock config is set to point to the generated config file.
@@ -331,7 +331,6 @@ def randomize_mock_config_dir(mock_config, mockfile)
   rm_r File.dirname(config)
   return basedir, configdir
 end
-
 
 namespace :pl do
   desc "Use default mock to make a final rpm, keyed to PL infrastructure, pass MOCK to specify config"

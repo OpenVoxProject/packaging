@@ -2,7 +2,6 @@
 # explicitly supports
 module Pkg
   module Platforms
-
     module_function
 
     DEBIAN_SOURCE_FORMATS = ['debian.tar.gz', 'orig.tar.gz', 'dsc', 'changes']
@@ -78,7 +77,7 @@ module Pkg
           source_package_formats: ['src.rpm'],
           signature_format: 'v4',
           repo: true,
-        }
+        },
       },
 
       'fedora' => {
@@ -139,7 +138,7 @@ module Pkg
           source_package_formats: ['src.rpm'],
           signature_format: 'v3',
           repo: true,
-        }
+        },
       },
 
       'sles' => {
@@ -230,14 +229,14 @@ module Pkg
           architectures: ['x86', 'x64'],
           package_format: 'msi',
           repo: false,
-        }
+        },
       },
       'windowsfips' => {
         '2012' => {
           architectures: ['x64'],
           package_format: 'msi',
           repo: false,
-        }
+        },
       },
     }.freeze
 
@@ -283,7 +282,6 @@ module Pkg
 
       version ||= (platform_elements & versions_for_platform(platform)).first
 
-
       # For platform names with a dash in them, because everything is special
       supported_arches = arches_for_platform_version(platform, version, true)
       architecture = platform_tag.sub(/^(#{platform}-#{version}|#{codename})-?/, '')
@@ -302,7 +300,7 @@ module Pkg
     #   platform-version-arch
     # @return [Hash] The hash of data associated with the given platform version
     def platform_lookup(platform_tag)
-      platform, version, _ = parse_platform_tag(platform_tag)
+      platform, version, = parse_platform_tag(platform_tag)
       PLATFORM_INFO[platform][version]
     end
 
@@ -314,12 +312,14 @@ module Pkg
     def get_attribute(platform_tag, attribute_name)
       info = platform_lookup(platform_tag)
       raise "#{platform_tag} doesn't have information about #{attribute_name} available" unless info.key?(attribute_name)
+
       info[attribute_name]
     end
 
     def get_attribute_for_platform_version(platform, version, attribute_name)
       info = PLATFORM_INFO[platform][version]
       raise "#{platform_tag} doesn't have information about #{attribute_name} available" unless info.key?(attribute_name)
+
       info[attribute_name]
     end
 

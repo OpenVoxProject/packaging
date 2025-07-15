@@ -72,7 +72,7 @@ namespace :pl do
     end
 
     desc "Update remote ips repository on #{Pkg::Config.ips_host}"
-    task :update_ips_repo  => 'pl:fetch' do
+    task :update_ips_repo => 'pl:fetch' do
       if Dir['pkg/ips/pkgs/**/*'].empty? && Dir['pkg/solaris/11/**/*'].empty?
         $stdout.puts "There aren't any p5p packages in pkg/ips/pkgs or pkg/solaris/11. Maybe something went wrong?"
       else
@@ -83,11 +83,11 @@ namespace :pl do
           source_dir = 'pkg/solaris/11/'
         end
 
-        tmpdir, _ = Pkg::Util::Net.remote_execute(
-                  Pkg::Config.ips_host,
-                  'mktemp -d -p /var/tmp',
-                  { capture_output: true }
-                )
+        tmpdir, = Pkg::Util::Net.remote_execute(
+          Pkg::Config.ips_host,
+          'mktemp -d -p /var/tmp',
+          { capture_output: true },
+        )
         tmpdir.chomp!
 
         Pkg::Util::Net.rsync_to(source_dir, Pkg::Config.ips_host, tmpdir)
@@ -166,7 +166,7 @@ namespace :pl do
             Pkg::Config.apt_repo_staging_path,
             Pkg::Config.apt_signing_server,
             Pkg::Config.apt_host,
-            ENV['DRYRUN']
+            ENV['DRYRUN'],
           )
         end
       end
@@ -192,7 +192,7 @@ namespace :pl do
             Pkg::Config.yum_repo_path,
             Pkg::Config.yum_staging_server,
             Pkg::Config.yum_host,
-            ENV['DRYRUN']
+            ENV['DRYRUN'],
           )
         end
       end
@@ -304,6 +304,7 @@ namespace :pl do
           puts 'This will ship to an internal gem mirror, a public file server, and rubygems.org'
           puts "Do you want to start shipping the rubygem '#{gem_file}'?"
           next unless Pkg::Util.ask_yes_or_no
+
           Rake::Task['pl:ship_gem_to_rubygems'].execute(file: gem_file)
         end
 
@@ -321,6 +322,7 @@ namespace :pl do
     if Pkg::Config.build_gem
       fail 'Value `Pkg::Config.gem_host` not defined, skipping nightly ship' unless Pkg::Config.gem_host
       fail 'Value `Pkg::Config.nonfinal_gem_path` not defined, skipping nightly ship' unless Pkg::Config.nonfinal_gem_path
+
       FileList['pkg/*.gem'].each do |gem_file|
         Pkg::Gem.ship_to_internal_mirror(gem_file)
       end
@@ -506,7 +508,7 @@ namespace :pl do
         Pkg::Util::Net.remote_execute(
           Pkg::Config.osx_signing_server,
           %(/usr/bin/security -q unlock-keychain -p "#{Pkg::Config.osx_signing_keychain_pw}" "#{Pkg::Config.osx_signing_keychain}"),
-          { extra_options: '-oBatchMode=yes' }
+          { extra_options: '-oBatchMode=yes' },
         )
       end
     rescue
@@ -564,7 +566,6 @@ namespace :pl do
 
       Pkg::Ship::DistributionServer.ship(local_dir, target)
       Pkg::Ship::Artifactory.ship(local_dir, target)
-
     end
 
     desc 'Ship generated repository configs to the distribution server'

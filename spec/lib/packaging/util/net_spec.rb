@@ -27,7 +27,6 @@ describe "Pkg::Util::Net" do
   end
 
   describe "hostname utils" do
-
     describe "hostname" do
       it "should return the hostname of the current host" do
         Socket.stub(:gethostname) { "foo" }
@@ -40,7 +39,7 @@ describe "Pkg::Util::Net" do
         it "should raise an exception if the passed host does not match the current host" do
           Socket.stub(:gethostname) { "foo" }
           Pkg::Util::Net.should_receive(:check_host).and_raise(RuntimeError)
-          expect{ Pkg::Util::Net.check_host("bar", :required => true) }.to raise_error(RuntimeError)
+          expect { Pkg::Util::Net.check_host("bar", :required => true) }.to raise_error(RuntimeError)
         end
       end
 
@@ -66,23 +65,25 @@ describe "Pkg::Util::Net" do
     it "should fail if ssh is not present" do
       Pkg::Util::Tool.stub(:find_tool).with("ssh") { fail }
       Pkg::Util::Tool.should_receive(:check_tool).with("ssh").and_raise(RuntimeError)
-      expect{ Pkg::Util::Net.remote_execute("foo", "bar") }.to raise_error(RuntimeError)
+      expect { Pkg::Util::Net.remote_execute("foo", "bar") }.to raise_error(RuntimeError)
     end
 
     it "should be able to not fail fast" do
-        Pkg::Util::Tool.should_receive(:check_tool).with("ssh").and_return(ssh)
-        Kernel.should_receive(:system).with("#{ssh}  -t foo 'bar'")
-        Pkg::Util::Execution.should_receive(:success?).and_return(true)
-        Pkg::Util::Net.remote_execute(
-          "foo", "bar", capture_output: false, extra_options: '', fail_fast: false)
+      Pkg::Util::Tool.should_receive(:check_tool).with("ssh").and_return(ssh)
+      Kernel.should_receive(:system).with("#{ssh}  -t foo 'bar'")
+      Pkg::Util::Execution.should_receive(:success?).and_return(true)
+      Pkg::Util::Net.remote_execute(
+        "foo", "bar", capture_output: false, extra_options: '', fail_fast: false
+      )
     end
 
     it "should be able to trace output" do
-        Pkg::Util::Tool.should_receive(:check_tool).with("ssh").and_return(ssh)
-        Kernel.should_receive(:system).with("#{ssh}  -t foo 'set -x;bar'")
-        Pkg::Util::Execution.should_receive(:success?).and_return(true)
-        Pkg::Util::Net.remote_execute(
-          "foo", "bar", capture_output: false, fail_fast: false, trace: true)
+      Pkg::Util::Tool.should_receive(:check_tool).with("ssh").and_return(ssh)
+      Kernel.should_receive(:system).with("#{ssh}  -t foo 'set -x;bar'")
+      Pkg::Util::Execution.should_receive(:success?).and_return(true)
+      Pkg::Util::Net.remote_execute(
+        "foo", "bar", capture_output: false, fail_fast: false, trace: true
+      )
     end
 
     context "without output captured" do
@@ -104,7 +105,7 @@ describe "Pkg::Util::Net" do
         Pkg::Util::Tool.should_receive(:check_tool).with("ssh").and_return(ssh)
         Kernel.should_receive(:system).with("#{ssh}  -t foo 'set -e;bar'")
         Pkg::Util::Execution.should_receive(:success?).and_return(false)
-        expect{ Pkg::Util::Net.remote_execute("foo", "bar") }
+        expect { Pkg::Util::Net.remote_execute("foo", "bar") }
           .to raise_error(RuntimeError, /failed./)
       end
     end
@@ -128,7 +129,7 @@ describe "Pkg::Util::Net" do
         Pkg::Util::Tool.should_receive(:check_tool).with("ssh").and_return(ssh)
         Pkg::Util::Execution.should_receive(:capture3).with("#{ssh}  -t foo 'set -e;bar'")
         Pkg::Util::Execution.should_receive(:success?).and_return(false)
-        expect{ Pkg::Util::Net.remote_execute("foo", "bar", capture_output: true) }
+        expect { Pkg::Util::Net.remote_execute("foo", "bar", capture_output: true) }
           .to raise_error(RuntimeError, /failed./)
       end
     end
@@ -139,7 +140,7 @@ describe "Pkg::Util::Net" do
     it "should fail if rsync is not present" do
       Pkg::Util::Tool.stub(:find_tool).with("rsync") { fail }
       Pkg::Util::Tool.should_receive(:check_tool).with("rsync").and_raise(RuntimeError)
-      expect{ Pkg::Util::Net.rsync_to("foo", "bar", "boo") }.to raise_error(RuntimeError)
+      expect { Pkg::Util::Net.rsync_to("foo", "bar", "boo") }.to raise_error(RuntimeError)
     end
 
     it "should rsync 'thing' to 'foo@bar:/home/foo' with flags '#{defaults} --ignore-existing'" do
@@ -165,13 +166,13 @@ describe "Pkg::Util::Net" do
     it "should fail if s3cmd is not present" do
       Pkg::Util::Tool.should_receive(:find_tool).with('s3cmd', :required => true).and_raise(RuntimeError)
       Pkg::Util::Execution.should_not_receive(:capture3).with("#{s3cmd} sync  'foo' s3://bar/boo/")
-      expect{ Pkg::Util::Net.s3sync_to("foo", "bar", "boo") }.to raise_error(RuntimeError)
+      expect { Pkg::Util::Net.s3sync_to("foo", "bar", "boo") }.to raise_error(RuntimeError)
     end
 
     it "should fail if ~/.s3cfg is not present" do
       Pkg::Util::Tool.should_receive(:check_tool).with("s3cmd").and_return(s3cmd)
       Pkg::Util::File.should_receive(:file_exists?).with(File.join(ENV['HOME'], '.s3cfg')).and_return(false)
-      expect{ Pkg::Util::Net.s3sync_to("foo", "bar", "boo") }.to raise_error(RuntimeError, /does not exist/)
+      expect { Pkg::Util::Net.s3sync_to("foo", "bar", "boo") }.to raise_error(RuntimeError, /does not exist/)
     end
 
     it "should s3 sync 'thing' to 's3://foo@bar/home/foo/' with no flags" do
@@ -194,7 +195,7 @@ describe "Pkg::Util::Net" do
     it "should fail if rsync is not present" do
       Pkg::Util::Tool.stub(:find_tool).with("rsync") { fail }
       Pkg::Util::Tool.should_receive(:check_tool).with("rsync").and_raise(RuntimeError)
-      expect{ Pkg::Util::Net.rsync_from("foo", "bar", "boo") }.to raise_error(RuntimeError)
+      expect { Pkg::Util::Net.rsync_from("foo", "bar", "boo") }.to raise_error(RuntimeError)
     end
 
     it "should not include the flags '--ignore-existing' by default" do
@@ -217,16 +218,15 @@ describe "Pkg::Util::Net" do
   end
 
   describe "#curl_form_data" do
-    let(:curl) {"/bin/curl"}
-    let(:form_data) {["name=FOO"]}
-    let(:options) { {:quiet => true} }
+    let(:curl) { "/bin/curl" }
+    let(:form_data) { ["name=FOO"] }
+    let(:options) { { :quiet => true } }
 
     it "should return false on failure" do
       Pkg::Util::Tool.should_receive(:check_tool).with("curl").and_return(curl)
       Pkg::Util::Execution.should_receive(:capture3).with("#{curl} -i '#{target_uri}'").and_return(['stdout', 'stderr', 1])
       Pkg::Util::Net.curl_form_data(target_uri).should eq(['stdout', 1])
     end
-
 
     it "should curl with just the uri" do
       Pkg::Util::Tool.should_receive(:check_tool).with("curl").and_return(curl)
@@ -245,14 +245,13 @@ describe "Pkg::Util::Net" do
       Pkg::Util::Execution.should_receive(:capture3).with("#{curl} -i #{form_data[0]} '#{target_uri}'").and_return(['stdout', 'stderr', 0])
       Pkg::Util::Net.curl_form_data(target_uri, form_data, options).should eq(['', 0])
     end
-
   end
 
   describe "#print_url_info" do
     it "should output correct formatting" do
       Pkg::Util::Net.should_receive(:puts).with("\n#{'/' * 80}\n\n" \
-           "Build submitted. To view your build progress, go to\nhttp://google.com\n\n" \
-           "#{'/' * 80}\n\n")
+                                                "Build submitted. To view your build progress, go to\nhttp://google.com\n\n" \
+                                                "#{'/' * 80}\n\n")
       Pkg::Util::Net.print_url_info(target_uri)
     end
   end

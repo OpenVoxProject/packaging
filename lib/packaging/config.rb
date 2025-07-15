@@ -79,13 +79,13 @@ module Pkg
                           Pkg::Util::Net.check_host_ssh([self.builds_server]).empty?
 
         dir = "/opt/jenkins-builds/#{self.project}/#{self.ref}"
-        cmd = "if [ -s \"#{dir}/artifacts\" ]; then cd #{dir};"\
+        cmd = "if [ -s \"#{dir}/artifacts\" ]; then cd #{dir};" \
               "find ./artifacts -mindepth 2 -type f; fi"
-        artifacts, _ = Pkg::Util::Net.remote_execute(
-                     self.builds_server,
-                     cmd,
-                     { capture_output: true }
-                   )
+        artifacts, = Pkg::Util::Net.remote_execute(
+          self.builds_server,
+          cmd,
+          { capture_output: true },
+        )
 
         artifacts = artifacts.split("\n")
         data = {}
@@ -131,12 +131,12 @@ module Pkg
 
           case package_format
           when 'deb'
-            repo_config = "../repo_configs/deb/pl-#{self.project}-#{self.ref}-"\
+            repo_config = "../repo_configs/deb/pl-#{self.project}-#{self.ref}-" \
                           "#{Pkg::Platforms.get_attribute(tag, :codename)}.list"
           when 'rpm'
             # Using original_tag here to not break legacy fedora repo targets
             unless tag.include? 'aix'
-              repo_config = "../repo_configs/rpm/pl-#{self.project}-"\
+              repo_config = "../repo_configs/rpm/pl-#{self.project}-" \
                             "#{self.ref}-#{original_tag}.repo"
             end
           when 'swix', 'svr4', 'ips', 'dmg', 'msi'
@@ -227,8 +227,8 @@ module Pkg
       # the debian changelog.
       #
       def cow_list
-        self.cows.split(' ').map do
-          |cow| cow.split('-')[1]
+        self.cows.split(' ').map do |cow|
+          cow.split('-')[1]
         end.uniq.join(' ')
       end
 
@@ -253,11 +253,11 @@ module Pkg
         got_config = false
         default_project_data = {
           path: File.join(@project_root, "ext", "project_data.yaml"),
-          required: false
+          required: false,
         }
         default_build_defaults = {
           path: File.join(@project_root, "ext", "build_defaults.yaml"),
-          required: true
+          required: true,
         }
 
         [default_project_data, default_build_defaults].each do |config|
@@ -433,6 +433,7 @@ module Pkg
       def string_to_array(str)
         delimiters = /[,\s;]/
         return str if str.respond_to?('each')
+
         str.split(delimiters).reject { |s| s.empty? }.map { |s| s.strip }
       end
 
@@ -452,9 +453,11 @@ module Pkg
       def deb_build_targets
         if self.vanagon_project
           fail "ERROR: Could not find any deb targets. Try adding `deb_targets` to your build_defaults.yaml. If you don't want to build any debs, set this to an empty string." unless self.deb_targets
+
           self.deb_targets.split(' ')
         else
           fail "ERROR: Could not find any deb targets. Try adding `cows` to your build_defaults.yaml. If you don't want to build any debs, set this to an empty string." unless self.cows
+
           self.cows.split(' ').map do |cow|
             codename, arch = self.cow_to_codename_arch(cow)
             "#{codename}-#{arch}"
@@ -465,9 +468,11 @@ module Pkg
       def rpm_build_targets
         if self.vanagon_project
           fail "ERROR: Could not find any rpm targets. Try adding `rpm_targets` to your build_defaults.yaml. If you don't want to build any rpms, set this to an empty string." unless self.rpm_targets
+
           self.rpm_targets.split(' ')
         else
           fail "ERROR: Could not find any rpm targets. Try adding `final_mocks` to your build_defaults.yaml. If you don't want to build any rpms, set this to an empty string." unless self.final_mocks
+
           self.final_mocks.split(' ').map do |mock|
             platform, version, arch = self.mock_to_dist_version_arch(mock)
             "#{platform}-#{version}-#{arch}"

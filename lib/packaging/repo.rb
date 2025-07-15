@@ -1,7 +1,5 @@
 module Pkg::Repo
-
   class << self
-
     ##
     ## Construct a local_target based upon the versioning style
     ##
@@ -29,6 +27,7 @@ module Pkg::Repo
         if ENV['FAIL_ON_MISSING_TARGET'] == "true"
           raise "Error: missing packages under #{repo_location}"
         end
+
         warn "Warn: Skipping #{archive_name} because #{repo_location} has no files"
         return
       end
@@ -37,7 +36,7 @@ module Pkg::Repo
         puts "Info: Archiving #{repo_location} as #{archive_name}"
         target_tarball = File.join('repos', "#{archive_name}.tar.gz")
         tar_command = "#{tar} --owner=0 --group=0 --create --gzip --file #{target_tarball} #{repo_location}"
-        stdout, _, _ = Pkg::Util::Execution.capture3(tar_command)
+        stdout, = Pkg::Util::Execution.capture3(tar_command)
         return stdout
       end
     end
@@ -68,7 +67,7 @@ module Pkg::Repo
         end
 
         tar_command = "#{tar} --owner=0 --group=0 #{tar_action} --file #{all_repos_tarball_name} #{repo_tarball_path}"
-        stdout, _, _ = Pkg::Util::Execution.capture3(tar_command)
+        stdout, = Pkg::Util::Execution.capture3(tar_command)
         puts stdout
       end
     end
@@ -81,7 +80,7 @@ module Pkg::Repo
       gzip = Pkg::Util::Tool.check_tool('gzip')
 
       gzip_command = "#{gzip} --fast #{all_repos_tarball_name}"
-      stdout, _, _ = Pkg::Util::Execution.capture3(gzip_command)
+      stdout, = Pkg::Util::Execution.capture3(gzip_command)
       puts stdout
     end
 
@@ -110,11 +109,11 @@ module Pkg::Repo
       cmd = "[ -d #{artifact_directory} ] || exit 1 ; "
       cmd << "pushd #{artifact_directory} > /dev/null && "
       cmd << "find . -name '*.#{pkg_ext}' -print0 | xargs --no-run-if-empty -0 -I {} dirname {} "
-      stdout, _ = Pkg::Util::Net.remote_execute(
-                Pkg::Config.distribution_server,
-                cmd,
-                { capture_output: true }
-              )
+      stdout, = Pkg::Util::Net.remote_execute(
+        Pkg::Config.distribution_server,
+        cmd,
+        { capture_output: true },
+      )
       return stdout.split
     rescue => e
       fail "Error: Could not retrieve directories that contain #{pkg_ext} packages in #{Pkg::Config.distribution_server}:#{artifact_directory}"
@@ -145,11 +144,12 @@ module Pkg::Repo
         __REPO_HOST__: options[:repo_host],
         __REPO_URL__: options[:repo_url],
         __APT_PLATFORMS__: Pkg::Config.apt_releases.join(' '),
-        __GPG_KEY__: Pkg::Util::Gpg.key
+        __GPG_KEY__: Pkg::Util::Gpg.key,
       }
       Pkg::Util::Net.remote_execute(
         remote_host,
-        Pkg::Util::Misc.search_and_replace(command, whitelist))
+        Pkg::Util::Misc.search_and_replace(command, whitelist),
+      )
     end
   end
 end

@@ -7,9 +7,9 @@ describe "Pkg::Deb::Repo" do
   let(:ref)           { "1234abcd" }
   let(:base_url)      { "http://#{builds_server}/#{project}/#{ref}" }
   let(:cows)          { ["xenial", "jessie", "trusty", "stretch", ""] }
-  let(:wget_results)  { cows.map {|cow| "#{base_url}/repos/apt/#{cow}" }.join("\n") }
+  let(:wget_results)  { cows.map { |cow| "#{base_url}/repos/apt/#{cow}" }.join("\n") }
   let(:wget_garbage)  { "\n and an index\nhttp://somethingelse.com/robots" }
-  let(:repo_configs)  { cows.reject {|cow| cow.empty?}.map {|dist| "pkg/repo_configs/deb/pl-#{project}-#{ref}-#{dist}.list" } }
+  let(:repo_configs)  { cows.reject { |cow| cow.empty? }.map { |dist| "pkg/repo_configs/deb/pl-#{project}-#{ref}-#{dist}.list" } }
 
   # Setup and tear down for the tests
   around do |example|
@@ -31,19 +31,19 @@ describe "Pkg::Deb::Repo" do
 
   describe "#generate_repo_configs" do
     it "fails if wget isn't available" do
-      Pkg::Util::Tool.should_receive(:find_tool).with("wget", {:required => true}).and_raise(RuntimeError)
-      expect {Pkg::Deb::Repo.generate_repo_configs}.to raise_error(RuntimeError)
+      Pkg::Util::Tool.should_receive(:find_tool).with("wget", { :required => true }).and_raise(RuntimeError)
+      expect { Pkg::Deb::Repo.generate_repo_configs }.to raise_error(RuntimeError)
     end
 
     it "warns if there are no deb repos available for the build" do
-      Pkg::Util::Tool.should_receive(:find_tool).with("wget", {:required => true}).and_return(wget)
+      Pkg::Util::Tool.should_receive(:find_tool).with("wget", { :required => true }).and_return(wget)
       Pkg::Util::Execution.should_receive(:capture3).with("#{wget} --spider -r -l 1 --no-parent #{base_url}/repos/apt/ 2>&1").and_raise(RuntimeError)
       Pkg::Deb::Repo.should_receive(:warn).with("No debian repos available for #{project} at #{ref}.")
       Pkg::Deb::Repo.generate_repo_configs
     end
 
     it "writes the expected repo configs to disk" do
-      Pkg::Util::Tool.should_receive(:find_tool).with("wget", {:required => true}).and_return(wget)
+      Pkg::Util::Tool.should_receive(:find_tool).with("wget", { :required => true }).and_return(wget)
       Pkg::Util::Execution.should_receive(:capture3).with("#{wget} --spider -r -l 1 --no-parent #{base_url}/repos/apt/ 2>&1").and_return(wget_results + wget_garbage)
       FileUtils.should_receive(:mkdir_p).with("pkg/repo_configs/deb")
       config = []
@@ -58,15 +58,15 @@ describe "Pkg::Deb::Repo" do
 
   describe "#retrieve_repo_configs" do
     it "fails if wget isn't available" do
-      Pkg::Util::Tool.should_receive(:find_tool).with("wget", {:required => true}).and_raise(RuntimeError)
-      expect {Pkg::Deb::Repo.generate_repo_configs}.to raise_error(RuntimeError)
+      Pkg::Util::Tool.should_receive(:find_tool).with("wget", { :required => true }).and_raise(RuntimeError)
+      expect { Pkg::Deb::Repo.generate_repo_configs }.to raise_error(RuntimeError)
     end
 
     it "warns if there are no deb repos available for the build" do
-      Pkg::Util::Tool.should_receive(:find_tool).with("wget", {:required => true}).and_return(wget)
+      Pkg::Util::Tool.should_receive(:find_tool).with("wget", { :required => true }).and_return(wget)
       FileUtils.should_receive(:mkdir_p).with("pkg/repo_configs").and_return(true)
       Pkg::Util::Execution.should_receive(:capture3).with("#{wget} -r -np -nH --cut-dirs 3 -P pkg/repo_configs --reject 'index*' #{base_url}/repo_configs/deb/").and_raise(RuntimeError)
-      expect {Pkg::Deb::Repo.retrieve_repo_configs}.to raise_error(RuntimeError, /Couldn't retrieve deb apt repo configs/)
+      expect { Pkg::Deb::Repo.retrieve_repo_configs }.to raise_error(RuntimeError, /Couldn't retrieve deb apt repo configs/)
     end
   end
 
@@ -88,14 +88,14 @@ describe "Pkg::Deb::Repo" do
     let(:pkg_directories) { ['place/to/deb/xenial', 'other/deb/trusty'] }
 
     it "generates repo configs remotely and then ships them" do
-      File.stub(:join) {artifact_directory}
+      File.stub(:join) { artifact_directory }
       Pkg::Repo.should_receive(:directories_that_contain_packages).and_return(pkg_directories)
       Pkg::Repo.should_receive(:populate_repo_directory)
       Pkg::Deb::Repo.should_receive(:repo_creation_command).and_return(command)
       Pkg::Util::Net.should_receive(:remote_execute).with(Pkg::Config.distribution_server, command)
       Pkg::Deb::Repo.should_receive(:generate_repo_configs)
       Pkg::Deb::Repo.should_receive(:ship_repo_configs)
-      Pkg::Util::Net.should_receive(:remote_execute).with(Pkg::Config.distribution_server, "rm -f #{artifact_directory}/repos/.lock" )
+      Pkg::Util::Net.should_receive(:remote_execute).with(Pkg::Config.distribution_server, "rm -f #{artifact_directory}/repos/.lock")
       Pkg::Deb::Repo.create_repos
     end
   end
@@ -123,7 +123,7 @@ describe "Pkg::Deb::Repo" do
 
   describe "#sign_repos" do
     it "fails without reprepro" do
-      Pkg::Util::Tool.should_receive(:find_tool).with('reprepro', {:required => true}).and_raise(RuntimeError)
+      Pkg::Util::Tool.should_receive(:find_tool).with('reprepro', { :required => true }).and_raise(RuntimeError)
       expect { Pkg::Deb::Repo.sign_repos }.to raise_error(RuntimeError)
     end
 
