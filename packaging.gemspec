@@ -2,15 +2,15 @@ require 'time'
 
 Gem::Specification.new do |gem|
   gem.name    = 'packaging'
-  gem.version = `git describe --tags`.tr('-', '.').chomp
+  gem.version = '1.0.0'
 
   gem.summary = "Puppet Labs' packaging automation"
   gem.description = 'Packaging automation written in Rake and Ruby. Easily build native packages for most platforms with a few data files and git.'
   gem.license = 'Apache-2.0'
 
-  gem.authors  = ['Puppet Labs']
-  gem.email    = 'info@puppetlabs.com'
-  gem.homepage = 'http://github.com/puppetlabs/packaging'
+  gem.authors  = ['Puppet Labs', 'OpenVoxProject']
+  gem.email    = 'openvox@voxpupuli.org'
+  gem.homepage = 'http://github.com/OpenVoxProject/packaging'
 
   gem.required_ruby_version = '>= 3.2.0'
 

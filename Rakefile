@@ -15,6 +15,9 @@ else
     config.user = 'OpenVoxProject'
     config.project = 'packaging'
     config.future_release = Gem::Specification.load("#{config.project}.gemspec").version
+    config.since_tag = '0.99.76' # last release from Perforce
+    config.exclude_tags_regex = /\A0\.\d\d\d/
+    config.release_branch = 'main'
   end
 
   # Workaround for https://github.com/github-changelog-generator/github-changelog-generator/issues/715
