@@ -3,7 +3,6 @@ require 'spec_helper'
 
 # Spec tests for Pkg::Util::Version
 #
-# rubocop:disable Metrics/BlockLength
 describe 'Pkg::Util::Version' do
   context '#versionbump' do
     let(:version_file) { 'thing.txt' }

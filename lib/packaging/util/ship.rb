@@ -3,7 +3,7 @@ require 'tmpdir'
 module Pkg::Util::Ship
   module_function
 
-  def collect_packages(pkg_exts, excludes = []) # rubocop:disable Metrics/MethodLength
+  def collect_packages(pkg_exts, excludes = [])
     pkgs = pkg_exts.map { |ext| Dir.glob(ext) }.flatten
     return [] if pkgs.empty?
 
@@ -57,7 +57,6 @@ module Pkg::Util::Ship
   #   false (most paths will be platform dependent), but set to true for gems
   #   and tarballs since those just land directly under /opt/downloads/<project>
   #
-  # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
   def ship_pkgs(pkg_exts, staging_server, remote_path, opts = {})
     options = {
       excludes: [],

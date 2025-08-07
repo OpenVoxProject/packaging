@@ -143,7 +143,7 @@ describe "Pkg::Config" do
     Build_Params.each do |param|
       it "should have r/w accessors for #{param}" do
         Pkg::Config.should respond_to(param)
-        Pkg::Config.should respond_to("#{param.to_s}=")
+        Pkg::Config.should respond_to("#{param}=")
       end
     end
   end
@@ -563,7 +563,7 @@ describe "Pkg::Config" do
           Pkg::Config.load_envvars
         end
       else
-        it "should set Pkg::Config##{v[:var]} to ENV[#{v[:envvar].to_s}]" do
+        it "should set Pkg::Config##{v[:var]} to ENV[#{v[:envvar]}]" do
           ENV[v[:envvar].to_s] = "FOO"
           Pkg::Util.stub(:boolean_value) { "FOO" }
           allow(Pkg::Config).to receive(:instance_variable_set)

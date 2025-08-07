@@ -2,7 +2,6 @@
 # This includes both reporting the correct path and divining the platform
 # tag associated with a variety of paths
 #
-# rubocop:disable Metrics/ModuleLength
 module Pkg::Paths
   include Pkg::Platforms
 
