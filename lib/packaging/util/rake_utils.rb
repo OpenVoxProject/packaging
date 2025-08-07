@@ -36,9 +36,9 @@ module Pkg::Util::RakeUtils
     def add_dependency(depender, dependency)
       if using_rake?
         if !task_defined?(depender)
-          fail "Could not locate a Rake task named '#{depender.to_s}' to add a dependency of '#{dependency.to_s}' to"
+          fail "Could not locate a Rake task named '#{depender}' to add a dependency of '#{dependency}' to"
         elsif !task_defined?(dependency)
-          fail "Could not locate a Rake task named '#{dependency.to_s}' to add as a dependency of '#{depender.to_s}'"
+          fail "Could not locate a Rake task named '#{dependency}' to add as a dependency of '#{depender}'"
         else
           depender_task = Rake::Task[depender]
           depender_task.enhance([dependency])

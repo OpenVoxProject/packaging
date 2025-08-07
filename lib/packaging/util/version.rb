@@ -80,7 +80,6 @@ module Pkg::Util::Version
     # 5.3.0.rc4-1
     # 3.0.5.rc6.24.g431768c-1
     #
-    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def base_pkg_version(version = Pkg::Config.version)
       return "#{dot_version(version)}-#{Pkg::Config.release}".split('-') if final?(version) || Pkg::Config.vanagon_project
 
@@ -143,13 +142,11 @@ module Pkg::Util::Version
     # with the intent that it never change the official source tree.
     #
     # rubocop:disable Metrics/AbcSize
-    # rubocop:disable Metrics/CyclomaticComplexity
-    # rubocop:disable Metrics/PerceivedComplexity
     def versionbump(workdir = nil)
       version = ENV['VERSION'] || Pkg::Config.version.to_s.strip
       new_version = '"' + version + '"'
 
-      version_file = "#{workdir ? workdir + '/' : ''}#{Pkg::Config.version_file}"
+      version_file = "#{workdir + '/' if workdir}#{Pkg::Config.version_file}"
 
       # Read the previous version file in...
       contents = IO.read(version_file)
@@ -182,7 +179,7 @@ module Pkg::Util::Version
     # input json file and output if it "looks tagged" or not
     #
     # @param json_data [hash] json data hash containing the ref to check
-    def report_json_tags(json_data) # rubocop:disable Metrics/AbcSize
+    def report_json_tags(json_data)
       puts 'component: ' + File.basename(json_data['url'])
       puts 'ref: ' + json_data['ref'].to_s
       if Pkg::Util::Git.remote_tagged?(json_data['url'], json_data['ref'].to_s)

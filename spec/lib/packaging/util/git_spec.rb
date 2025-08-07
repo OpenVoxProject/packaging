@@ -2,7 +2,6 @@
 require 'spec_helper'
 require 'packaging/util/git'
 
-# rubocop:disable Metrics/BlockLength
 describe 'Pkg::Util::Git' do
   context '#commit_file' do
     let(:file) { 'thing.txt' }

@@ -94,6 +94,12 @@ Lint/NonAtomicFileOperation:
     - 'lib/packaging/ship/artifactory.rb'
 
 # Offense count: 1
+# This cop supports safe autocorrection (--autocorrect).
+Lint/RedundantCopDisableDirective:
+  Exclude:
+    - 'lib/packaging/util/version.rb'
+
+# Offense count: 1
 # Configuration parameters: AllowComments, AllowNil.
 Lint/SuppressedException:
   Exclude:
@@ -771,14 +777,6 @@ Style/EmptyCaseCondition:
 Style/EmptyMethod:
   Exclude:
     - 'tasks/vendor_gems.rake'
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: trailing_conditional, ternary
-Style/EmptyStringInsideInterpolation:
-  Exclude:
-    - 'lib/packaging/util/version.rb'
 
 # Offense count: 11
 # This cop supports unsafe autocorrection (--autocorrect-all).
