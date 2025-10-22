@@ -18,7 +18,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency('voxpupuli-rubocop', '~> 4.2.0')
   gem.add_dependency('artifactory', ['~> 3'])
   gem.add_dependency('base64', ['< 0.4'])
-  gem.add_dependency('benchmark', ['< 0.5'])
+  gem.add_dependency('benchmark', '< 0.6')
   gem.add_dependency('csv', ['~> 3.0'])
   gem.add_dependency('rake', ['>= 12.3'])
   gem.add_dependency('release-metrics')
