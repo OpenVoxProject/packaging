@@ -15,7 +15,7 @@ Gem::Specification.new do |gem|
   gem.required_ruby_version = '>= 3.2.0'
 
   gem.add_development_dependency('rspec', ['>= 2.14.1', '< 4'])
-  gem.add_development_dependency('voxpupuli-rubocop', '~> 4.2.0')
+  gem.add_development_dependency('voxpupuli-rubocop', '~> 5.0.0')
   gem.add_dependency('artifactory', ['~> 3'])
   gem.add_dependency('base64', ['< 0.4'])
   gem.add_dependency('benchmark', '< 0.6')
